@@ -123,7 +123,7 @@ class CasClinique(models.Model):
     )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    problement_initial =  models.TextField(null=False)
+    probleme_initial =  models.TextField(null=False)
     difficulte = models.CharField(choices=DIFFICULTE, max_length=50)
     diagnostic_final = models.CharField(null=False, max_length=100)
     systeme = models.CharField(choices=SYSTEME, max_length=50)
@@ -269,8 +269,12 @@ class ExamenPhysique(Examen):
 class Media(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     fichier = models.FileField(null=False)
+    examen = models.ForeignKey(Examen, on_delete=models.CASCADE, null=False)
+    created_at = models.DateTimeField(null=False, auto_now_add=True)
+    deleted_at = models.DateTimeField(null=False, auto_now_add=True)
+    updated_at = models.DateTimeField(null=False, auto_now_add=True)
 
-class Type_parametre(models.Model):
+class TypeParametre(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     nom = models.CharField(max_length=30)
@@ -281,11 +285,11 @@ class Type_parametre(models.Model):
 
     def __str__(self):
         return self.nom + " en " + self.unite
-class ParametreMedicaux(models.Model):
+class ParametreMedical(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     valeur = models.DecimalField(max_digits=10, decimal_places=2)
     commentaire = models.TextField(blank=True)
-    type_parametre = models.ForeignKey(Type_parametre, on_delete=models.CASCADE, null=False)
+    type_parametre = models.ForeignKey(TypeParametre, on_delete=models.CASCADE, null=False)
     cas_clinique = models.ForeignKey(CasClinique, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
@@ -341,7 +345,7 @@ class Symptome(models.Model):
     duree = models.CharField(max_length=100, null=True)
     date_debut = models.DateField(null=True)
     evolution = models.CharField(max_length=150)
-    activite_declanchante = models.CharField(max_length=100)
+    activite_declenchante = models.CharField(max_length=100)
     cas_clinique = models.ForeignKey(CasClinique, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
@@ -381,7 +385,7 @@ class AntecedentObstetrical(models.Model):
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now_add=True)
 
-class chirurgie(models.Model):
+class Chirurgie(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     nom = models.CharField(max_length=100)
     date = models.DateField(null=True)
