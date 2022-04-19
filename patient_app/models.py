@@ -51,7 +51,7 @@ class MedecinApprenant(Medecin):
     )
 
     experience = models.CharField(max_length=20, choices=EXPERIENCE)
-    niveau_connaissance = models.DecimalField(default=0.0, null=True)
+    niveau_connaissance = models.DecimalField(default=0.0, null=True, decimal_places=2, max_digits=6)
 
 class MedecinExpert(Medecin):
     GRADE = (
@@ -71,7 +71,7 @@ class Log(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     operation = models.CharField(max_length=20, choices=OPERATION)
-    medecin = models.ForeignKey(Medecin, on_delete=models.SET_NULL, null=False)
+    medecin = models.ForeignKey(Medecin, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now_add=True)
@@ -94,7 +94,7 @@ class PatientVirtuel(models.Model):
     etat_civil = models.CharField(choices=ETAT_CIVIL, max_length=50)
     age_min = models.IntegerField(default=0, null=False)
     age_max = models.IntegerField(default=0, null=False)
-    poids = models.DecimalField(default=0.0, null=False)
+    poids = models.DecimalField(default=0.0, null=False, decimal_places=2, max_digits=6)
     modele_3D = models.FileField(null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
@@ -134,8 +134,8 @@ class CasClinique(models.Model):
 
 class CasVirtuel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    patient_virtuel = models.ForeignKey(PatientVirtuel, on_delete=models.SET_NULL, null=False)
-    cas_clinique = models.ForeignKey(CasClinique, on_delete=models.SET_NULL, null=False)
+    patient_virtuel = models.ForeignKey(PatientVirtuel, on_delete=models.SET_NULL, null=True)
+    cas_clinique = models.ForeignKey(CasClinique, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now_add=True)
@@ -144,7 +144,7 @@ class CasVirtuel(models.Model):
 class Feedback(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     commentaire = models.TextField(blank=True)
-    medecin_expert = models.ForeignKey(MedecinExpert, on_delete=models.SET_NULL, null=False)
+    medecin_expert = models.ForeignKey(MedecinExpert, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now_add=True)
@@ -158,11 +158,11 @@ class Evaluation(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     type = models.CharField(max_length=20, choices=TYPE)
-    note = models.DecimalField(default=0.0, null=True)
+    note = models.DecimalField(default=0.0, null=True, decimal_places=2, max_digits=5)
     remarque = models.TextField(blank=True)
-    medecin_apprenant = models.ForeignKey(MedecinApprenant, on_delete=models.SET_NULL, null=False)
-    cas_virtuel = models.ForeignKey(CasVirtuel, on_delete=models.SET_NULL, null=False)
-    feedback = models.ForeignKey(Feedback, on_delete=models.SET_NULL, null=False)
+    medecin_apprenant = models.ForeignKey(MedecinApprenant, on_delete=models.SET_NULL, null=True)
+    cas_virtuel = models.ForeignKey(CasVirtuel, on_delete=models.SET_NULL, null=True)
+    feedback = models.ForeignKey(Feedback, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now_add=True)
@@ -171,8 +171,8 @@ class Hypothese(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     description = models.TextField(blank=False)
-    medecin_apprenant = models.ForeignKey(MedecinApprenant, on_delete=models.SET_NULL, null=False)
-    evaluation = models.ForeignKey(Evaluation, on_delete=models.SET_NULL, null=False)
+    medecin_apprenant = models.ForeignKey(MedecinApprenant, on_delete=models.SET_NULL, null=True)
+    evaluation = models.ForeignKey(Evaluation, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now_add=True)
@@ -182,8 +182,8 @@ class Question(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     question = models.TextField(blank=False)
     reponse = models.TextField(blank=False)
-    medecin_apprenant = models.ForeignKey(MedecinApprenant, on_delete=models.SET_NULL, null=False)
-    evaluation = models.ForeignKey(Evaluation, on_delete=models.SET_NULL, null=False)
+    medecin_apprenant = models.ForeignKey(MedecinApprenant, on_delete=models.SET_NULL, null=True)
+    evaluation = models.ForeignKey(Evaluation, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now_add=True)
@@ -217,7 +217,7 @@ class InfosPersonnelles(models.Model):
     etat_civil = models.CharField(choices=ETAT_CIVIL, max_length=50)
     profession = models.CharField(max_length=100, null=True)
     nbre_enfant = models.IntegerField(null=True)
-    groupe_sanguin = models.CharField(choices=GROUPE_SANGUIN, null=True)
+    groupe_sanguin = models.CharField(choices=GROUPE_SANGUIN, null=True, max_length=50)
     cas_clinique = models.ForeignKey(CasClinique, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)

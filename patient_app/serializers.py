@@ -222,7 +222,7 @@ class InfosPersonnellesSerializer(serializers.HyperlinkedModelSerializer):
             'profession',
             'nbre_enfant',
             'groupe_sanguin',
-            'cas_clinque',
+            'cas_clinique',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -241,7 +241,7 @@ class TraitementEnCoursSerializer(serializers.HyperlinkedModelSerializer):
             'date_debut',
             'observation',
             'efficacite',
-            'cas_clinque',
+            'cas_clinique',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -258,7 +258,7 @@ class DiagnosticPhysiqueSerializer(serializers.HyperlinkedModelSerializer):
             'diagnostic_physique',
             'resultat',
             'fichier',
-            'cas_clinque',
+            'cas_clinique',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -274,7 +274,7 @@ class ExamenSerializer(serializers.HyperlinkedModelSerializer):
             'id',
             'description',
             'resultat',
-            'cas_clinque',
+            'cas_clinique',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -290,7 +290,7 @@ class ExamenPhysiqueSerializer(serializers.HyperlinkedModelSerializer):
             'id',
             'description',
             'resultat',
-            'cas_clinque',
+            'cas_clinique',
             'anatomie',
             'type_resultat',
             'created_at',
@@ -338,7 +338,7 @@ class ParametreMedicalSerializer(serializers.HyperlinkedModelSerializer):
             'valeur',
             'commantaire',
             'type_parametre',
-            'cas_clinque',
+            'cas_clinique',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -355,7 +355,7 @@ class ModeVieSerializer(serializers.HyperlinkedModelSerializer):
             'qualite_eau',
             'moustiquaire',
             'animal_compagnie',
-            'cas_clinque',
+            'cas_clinique',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -426,7 +426,7 @@ class SymptomeSerializer(serializers.HyperlinkedModelSerializer):
             'date_debut',
             'evolution',
             'activite_declenchante',
-            'cas_clinque',
+            'cas_clinique',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -457,7 +457,7 @@ class ConceptSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'id',
             'nom',
-            'cas_clinque',
+            'cas_clinique',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -472,7 +472,7 @@ class AntecedentMedicalSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'id',
             'antecedents_familiaux',
-            'cas_clinque',
+            'cas_clinique',
             'created_at',
             'deleted_at',
             'updated_at'
