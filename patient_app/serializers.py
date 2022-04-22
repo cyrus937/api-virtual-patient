@@ -78,7 +78,7 @@ class MedecinExpertSerializer(serializers.HyperlinkedModelSerializer):
 
 class LogSerializer(serializers.HyperlinkedModelSerializer):
 
-    doctor = MedecinSerializer(read_only=True)
+   
 
     class Meta:
         model = Log
@@ -124,8 +124,6 @@ class CasCliniqueSerializer(serializers.HyperlinkedModelSerializer):
 
 class CasVirtuelSerializer(serializers.HyperlinkedModelSerializer):
 
-    clinical_case = CasCliniqueSerializer(read_only=True)
-    virtual_patient = PatientVirtuelSerializer(read_only=True)
 
     class Meta:
         model = CasVirtuel
@@ -140,7 +138,6 @@ class CasVirtuelSerializer(serializers.HyperlinkedModelSerializer):
 
 class FeedbackSerializer(serializers.HyperlinkedModelSerializer):
 
-    expert_physician = MedecinExpertSerializer(read_only=True)
 
     class Meta:
         model = Feedback
@@ -155,9 +152,6 @@ class FeedbackSerializer(serializers.HyperlinkedModelSerializer):
 
 class EvaluationSerializer(serializers.HyperlinkedModelSerializer):
 
-    learner_physician = MedecinApprenantSerializer(read_only=True)
-    virtual_case = CasVirtuelSerializer(read_only=True)
-    feedback = FeedbackSerializer(read_only=True)
 
     class Meta:
         model = Evaluation
@@ -176,8 +170,6 @@ class EvaluationSerializer(serializers.HyperlinkedModelSerializer):
 
 class HypotheseSerializer(serializers.HyperlinkedModelSerializer):
 
-    learner_physician = MedecinApprenantSerializer(read_only=True)
-    evaluation = EvaluationSerializer(read_only=True)
 
     class Meta:
         model = Hypothese
@@ -193,8 +185,6 @@ class HypotheseSerializer(serializers.HyperlinkedModelSerializer):
 
 class QuestionSerializer(serializers.HyperlinkedModelSerializer):
 
-    learner_physician = MedecinApprenantSerializer(read_only=True)
-    evaluation = EvaluationSerializer(read_only=True)
 
     class Meta:
         model = Question
@@ -211,7 +201,6 @@ class QuestionSerializer(serializers.HyperlinkedModelSerializer):
 
 class InfosPersonnellesSerializer(serializers.HyperlinkedModelSerializer):
 
-    clinical_case = CasCliniqueSerializer(read_only=True)
 
     class Meta:
         model = InfosPersonnelles
@@ -230,7 +219,6 @@ class InfosPersonnellesSerializer(serializers.HyperlinkedModelSerializer):
 
 class TraitementEnCoursSerializer(serializers.HyperlinkedModelSerializer):
 
-    clinical_case = CasCliniqueSerializer(read_only=True)
 
     class Meta:
         model = TraitementEnCours
@@ -249,8 +237,6 @@ class TraitementEnCoursSerializer(serializers.HyperlinkedModelSerializer):
 
 class DiagnosticPhysiqueSerializer(serializers.HyperlinkedModelSerializer):
 
-    clinical_case = CasCliniqueSerializer(read_only=True)
-
     class Meta:
         model = DiagnosticPhysique
         fields = [
@@ -266,8 +252,6 @@ class DiagnosticPhysiqueSerializer(serializers.HyperlinkedModelSerializer):
 
 class ExamenSerializer(serializers.HyperlinkedModelSerializer):
 
-    clinical_case = CasCliniqueSerializer(read_only=True)
-
     class Meta:
         model = Examen
         fields = [
@@ -281,8 +265,6 @@ class ExamenSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 class ExamenPhysiqueSerializer(serializers.HyperlinkedModelSerializer):
-
-    clinical_case = CasCliniqueSerializer(read_only=True)
 
     class Meta:
         model = ExamenPhysique
@@ -299,8 +281,6 @@ class ExamenPhysiqueSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 class MediaSerializer(serializers.HyperlinkedModelSerializer):
-
-    exam = ExamenSerializer(read_only=True)
 
     class Meta:
         model = Media
@@ -328,9 +308,6 @@ class TypeParametreSerializer(serializers.HyperlinkedModelSerializer):
 
 class ParametreMedicalSerializer(serializers.HyperlinkedModelSerializer):
 
-    clinical_case = CasCliniqueSerializer(read_only=True)
-    type_parameter = TypeParametreSerializer(read_only=True)
-
     class Meta:
         model = ParametreMedical
         fields = [
@@ -345,8 +322,6 @@ class ParametreMedicalSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 class ModeVieSerializer(serializers.HyperlinkedModelSerializer):
-
-    clinical_case = CasCliniqueSerializer(read_only=True)
 
     class Meta:
         model = ModeVie
@@ -363,8 +338,6 @@ class ModeVieSerializer(serializers.HyperlinkedModelSerializer):
 
 class ActivitePhysiqueSerializer(serializers.HyperlinkedModelSerializer):
 
-    life_style = ModeVieSerializer(read_only=True)
-
     class Meta:
         model = ActivitePhysique
         fields = [
@@ -378,8 +351,6 @@ class ActivitePhysiqueSerializer(serializers.HyperlinkedModelSerializer):
         ]
     
 class AddictionSerializer(serializers.HyperlinkedModelSerializer):
-
-    life_style = ModeVieSerializer(read_only=True)
 
     class Meta:
         model = Addiction
@@ -397,8 +368,6 @@ class AddictionSerializer(serializers.HyperlinkedModelSerializer):
 
 class VoyageSerializer(serializers.HyperlinkedModelSerializer):
 
-    life_style = ModeVieSerializer(read_only=True)
-
     class Meta:
         model = Voyage
         fields = [
@@ -413,8 +382,6 @@ class VoyageSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 class SymptomeSerializer(serializers.HyperlinkedModelSerializer):
-
-    clinical_case = CasCliniqueSerializer(read_only=True)
 
     class Meta:
         model = Symptome
@@ -434,8 +401,6 @@ class SymptomeSerializer(serializers.HyperlinkedModelSerializer):
 
 class DescriptionSymptomeSerializer(serializers.HyperlinkedModelSerializer):
 
-    symptom = SymptomeSerializer(read_only=True)
-
     class Meta:
         model = DescriptionSymptome
         fields = [
@@ -450,8 +415,6 @@ class DescriptionSymptomeSerializer(serializers.HyperlinkedModelSerializer):
 
 class ConceptSerializer(serializers.HyperlinkedModelSerializer):
 
-    clinical_case = CasCliniqueSerializer(read_only=True)
-
     class Meta:
         model = Concept
         fields = [
@@ -465,8 +428,6 @@ class ConceptSerializer(serializers.HyperlinkedModelSerializer):
 
 class AntecedentMedicalSerializer(serializers.HyperlinkedModelSerializer):
 
-    clinical_case = CasCliniqueSerializer(read_only=True)
-
     class Meta:
         model = AntecedentMedical
         fields = [
@@ -479,8 +440,6 @@ class AntecedentMedicalSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 class AntecedentObstetricalSerializer(serializers.HyperlinkedModelSerializer):
-
-    medical_antecedent = AntecedentMedicalSerializer(read_only=True)
 
     class Meta:
         model = AntecedentObstetrical
@@ -496,8 +455,6 @@ class AntecedentObstetricalSerializer(serializers.HyperlinkedModelSerializer):
 
 class ChirurgieSerializer(serializers.HyperlinkedModelSerializer):
 
-    medical_antecedent = AntecedentMedicalSerializer(read_only=True)
-
     class Meta:
         model = Chirurgie
         fields = [
@@ -511,8 +468,6 @@ class ChirurgieSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 class AllergieSerializer(serializers.HyperlinkedModelSerializer):
-
-    medical_antecedent = AntecedentMedicalSerializer(read_only=True)
 
     class Meta:
         model = Allergie
@@ -541,9 +496,6 @@ class TraitementSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 class MaladieSerializer(serializers.HyperlinkedModelSerializer):
-
-    medical_antecedent = AntecedentMedicalSerializer(read_only=True)
-    treatment = TraitementSerializer(read_only=True)
 
     class Meta:
         model = Maladie
