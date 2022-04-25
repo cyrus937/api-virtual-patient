@@ -21,7 +21,8 @@ from django.conf.urls.static import static
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from patient_app import views
+from patient_app import views as viewsPatient
+from expert_app import views as viewsExpert
 
 @api_view(['GET'])
 def root(request):
@@ -31,12 +32,15 @@ def root(request):
     
     return Response({
         "PATIENT VIRTUEL API": request.build_absolute_uri() + 'patient-virtuel/',
+        "MODULE EXPERT": request.build_absolute_uri() + 'module-expert/'
     })
 
 urlpatterns = [
-    path('', views.root),
+    path('', viewsPatient.root),
+    path('', viewsExpert.root),
     path('api/', root),
     path('api/patient-virtuel/', include('patient_app.urls')),
+    path('api/module-expert/', include('expert_app.urls')),
 
     path('admin/', admin.site.urls),
 ]
