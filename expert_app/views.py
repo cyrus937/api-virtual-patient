@@ -15,14 +15,8 @@ from .serializers import *
 import pandas as pd
 import numpy as np
 import pyAgrum as gum
-import pyAgrum.lib.notebook as gnb
 
 # Create your views here.
-class MediaViewSet(viewsets.ModelViewSet):
-    queryset = Media.objects.all()
-    serializer_class = MediaSerializer
-
-
 
 # Réseau bayésien
 # Importation du réseau bayésien
@@ -56,9 +50,9 @@ def inference_maladie_symptoms(request):
   
   if body == None:
     result = {
-            "status": "FAILURE",
-            "message": "disease or symptoms required"
-        }
+      "status": "FAILURE",
+      "message": "disease or symptoms required"
+    }
     return Response(result, status.HTTP_204_NO_CONTENT)
   
   else:
@@ -81,12 +75,12 @@ def inference_maladie_symptoms(request):
 @api_view(['GET'])
 def errorPage(request):
     """
-                Cette vue est renvoyé lorsque aucune url ne correspond a celle appelé
-        """
+      Cette vue est renvoyé lorsque aucune url ne correspond a celle appelé
+    """
     result = {
-        "status": False,
-        "message": "Vérifiez votre URL",
-        "data": {}
+      "status": False,
+      "message": "Vérifiez votre URL",
+      "data": {}
     }
     return Response(result, status=status.HTTP_404_NOT_FOUND)
 

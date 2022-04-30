@@ -5,7 +5,6 @@ from rest_framework import routers
 from . import views
 
 routers = routers.DefaultRouter()
-routers.register(r'media', views.MediaViewSet)
 
 urlpatterns = [
     path('', include(routers.urls)),
