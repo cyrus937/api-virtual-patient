@@ -1,5 +1,64 @@
 from .models import *
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+class RegistrationSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Doctor
+        fields = [
+            'id',
+            'name',
+            'first_name',
+            'phone_number',
+            'address',
+            'city',
+            'cni',
+            'sex',
+            'specialty',
+            'year_of_birth',
+            'place_of_birth',
+            'nationality',
+            'email',
+            'username',
+            'password',
+            'created_at',
+            'deleted_at',
+            'updated_at'
+        ]
+    
+    
+    def validate(self,args):
+        email = args.get('email', None)
+        username = args.get('username', None)
+        if Doctor.objects.filter(email=email).exists():
+            raise serializers.ValidationError({'email' : ('email already exists')})
+        if Doctor.objects.filter(username=username).exists():
+            raise serializers.ValidationError({'username' : ('usernale already exists')})
+       
+        return super().validate(args)
+    
+    def create(self, validated_data):
+        return Doctor.objects.create(**validated_data)
+        #return User.objects.create_user(**validated_data)
+
+class TokenObtainSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+
+        username=attrs.get('username', None)
+        password=attrs.get('password', None)
+        queryset = Doctor.objects.get(username=username, password=password)
+        print(attrs)
+        data = super().validate(attrs)
+        refresh = self.get_token(self.user)
+
+        data["refresh"] = str(refresh)
+        data["access"] = str(refresh.access_token)
+        data["test"] = "value"
+        serializer = DoctorSerializer(queryset)
+        data["User"] = serializer.data
+
+        return data
 
 class DoctorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

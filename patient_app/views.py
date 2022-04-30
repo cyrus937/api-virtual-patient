@@ -1,23 +1,131 @@
 from django.shortcuts import redirect
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, generics
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+from django.contrib.auth.models import User
 
 from .models import *
 from .serializers import *
 
 # Create your views here.
+
+class RegistrationAPIView(generics.GenericAPIView):
+    queryset = Doctor.objects.all()
+    serializer_class = DoctorSerializer
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data = request.data)
+        
+        if(serializer.is_valid()):
+            self.perform_create(serializer)
+            user = User.objects.create(
+                username = serializer.data["username"],
+                first_name = serializer.data["firts_name"],
+                last_name = serializer.data["name"],
+                email = serializer.data["email"],
+            )
+            user.set_password(serializer.data["password"])
+            user.save()
+            user = DoctorViewSet()
+            return Response({
+                "status":True,
+                "RequestId": str(uuid.uuid4()),
+                "Message": "Doctor created successfully",
+                "User":serializer.data}, status=status.HTTP_201_CREATED
+                )
+        print(serializer.errors )
+        
+        return Response({"status":False,"Errors":serializer.errors}, status.HTTP_400_BAD_REQUEST)
+
+class CutomObtainPairView(TokenObtainPairView):
+    serializer_class = TokenObtainSerializer
+
 class DoctorViewSet(viewsets.ModelViewSet):
   queryset = Doctor.objects.all()
   serializer_class = DoctorSerializer
+
+  def create(self, request, *args, **kwargs):
+        print(request.data)
+        serializer = self.get_serializer(data = request.data)
+        
+        print(serializer.is_valid())
+        if(serializer.is_valid()):
+            self.perform_create(serializer)
+            user = User.objects.create(
+                username = serializer.data["username"],
+                first_name = serializer.data["first_name"],
+                last_name = serializer.data["name"],
+                email = serializer.data["email"],
+            )
+            user.set_password(serializer.data["password"])
+            user.save()
+            return Response({
+                "status":True,
+                "RequestId": str(uuid.uuid4()),
+                "Message": "User created successfully",
+                "User":serializer.data}, status=status.HTTP_201_CREATED
+                )
+        
+        return Response({"status":False,"Errors":serializer.errors}, status.HTTP_400_BAD_REQUEST)
 
 class LeanerPhysicianViewSet(viewsets.ModelViewSet):
   queryset = LeanerPhysician.objects.all()
   serializer_class = LeanerPhysicianSerializer
 
+  def create(self, request, *args, **kwargs):
+        print(request.data)
+        serializer = self.get_serializer(data = request.data)
+        
+        print(serializer.is_valid())
+        if(serializer.is_valid()):
+            self.perform_create(serializer)
+            user = User.objects.create(
+                username = serializer.data["username"],
+                first_name = serializer.data["first_name"],
+                last_name = serializer.data["name"],
+                email = serializer.data["email"],
+            )
+            user.set_password(serializer.data["password"])
+            user.save()
+            return Response({
+                "status":True,
+                "RequestId": str(uuid.uuid4()),
+                "Message": "User created successfully",
+                "User":serializer.data}, status=status.HTTP_201_CREATED
+                )
+        
+        return Response({"status":False,"Errors":serializer.errors}, status.HTTP_400_BAD_REQUEST)
+
 class ExpertPhysicianViewSet(viewsets.ModelViewSet):
   queryset = ExpertPhysician.objects.all()
   serializer_class = ExpertPhysicianSerializer
+
+  def create(self, request, *args, **kwargs):
+        print(request.data)
+        serializer = self.get_serializer(data = request.data)
+        
+        print(serializer.is_valid())
+        if(serializer.is_valid()):
+            self.perform_create(serializer)
+            user = User.objects.create(
+                username = serializer.data["username"],
+                first_name = serializer.data["first_name"],
+                last_name = serializer.data["name"],
+                email = serializer.data["email"],
+            )
+            user.set_password(serializer.data["password"])
+            user.save()
+            return Response({
+                "status":True,
+                "RequestId": str(uuid.uuid4()),
+                "Message": "User created successfully",
+                "User":serializer.data}, status=status.HTTP_201_CREATED
+                )
+        
+        return Response({"status":False,"Errors":serializer.errors}, status.HTTP_400_BAD_REQUEST)
 
 class LogViewSet(viewsets.ModelViewSet):
   queryset = Log.objects.all()

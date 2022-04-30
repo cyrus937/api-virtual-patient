@@ -1,8 +1,53 @@
 from random import choices
 from django.db import models
+from django.contrib.auth.models import BaseUserManager
 import uuid
 
 # Create your models here.
+
+class UserManager(BaseUserManager):
+    def create_user(self, email, name = None, first_name = None, username = None, password=None, is_active=True, is_staff=False, is_admin=False):
+        if not email:
+            raise ValueError("User must have an email")
+        if not password:
+            raise ValueError("User must have a password")
+        user_obj = self.model(
+            username = username,
+            first_name = first_name,
+            last_name = name,
+            email = email
+        )
+        user_obj.set_password(password)
+        user_obj.staff = is_staff
+        user_obj.admin = is_admin
+        user_obj.active = is_active
+        #user_obj.save(using=self._db)
+        user_obj.save()
+        return user_obj
+    
+    def create_staffuser(self, email, name = None, first_name = None, username = None, password=None):
+        user = self.create_user(
+            email,
+            name = name,
+            first_name = first_name,
+            username = username, 
+            password=password, 
+            is_staff=True
+        )
+        return user
+    
+    def create_superuser(self, email = None, name = None, first_name = None, username = None, password=None):
+        user = self.create_user(
+            email,
+            name = name,
+            first_name = first_name,
+            username = username, 
+            password=password,  
+            is_staff=True,
+            is_admin=True
+        )
+        return user
+
 class Doctor(models.Model):
     """
         doctor model
@@ -39,6 +84,8 @@ class Doctor(models.Model):
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
+
+    objects = UserManager()
 
     def __str__(self):
         return self.name + " " + self.first_name + " " + str(self.year_of_birth)

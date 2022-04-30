@@ -18,6 +18,7 @@ from django.urls import path, include
 
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import TokenRefreshView
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -31,16 +32,19 @@ def root(request):
     """
     
     return Response({
+        "USER LOGIN API": request.build_absolute_uri() + 'auth/login/',
+        "USER REFRESH-TOKEN API": request.build_absolute_uri() + 'auth/refresh-token/',
         "VIRTUAL PATIENT API": request.build_absolute_uri() + 'virtual-patient/',
         "EXPERT MODULE": request.build_absolute_uri() + 'expert-module/'
     })
 
 urlpatterns = [
-    path('', viewsPatient.root),
-    path('', viewsExpert.root),
     path('api/', root),
+    path('admin/', admin.site.urls),
+    path('api/auth/login/', viewsPatient.CutomObtainPairView.as_view(), name='login'),
+    path('api/auth/refresh-token/', TokenRefreshView.as_view, name='refreshtoken'),
+    #path('', viewsPatient.root),
+    #path('', viewsExpert.root),
     path('api/virtual-patient/', include('patient_app.urls')),
     path('api/expert-module/', include('expert_app.urls')),
-
-    path('admin/', admin.site.urls),
 ]
