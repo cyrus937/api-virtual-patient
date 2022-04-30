@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 class MedecinSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Medecin
+        model = Doctor
         fields = [
             'id',
             'name',
