@@ -14,8 +14,31 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from patient_app import views
+
+@api_view(['GET'])
+def root(request):
+    """
+        Entry point of the API
+    """
+    
+    return Response({
+        "PATIENT VIRTUEL API": request.build_absolute_uri() + 'patient-virtuel/',
+    })
 
 urlpatterns = [
+    path('', views.root),
+    path('api/', root),
+    path('api/patient-virtuel/', include('patient_app.urls')),
+
     path('admin/', admin.site.urls),
 ]
