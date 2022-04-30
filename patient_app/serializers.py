@@ -6,17 +6,17 @@ class MedecinSerializer(serializers.HyperlinkedModelSerializer):
         model = Medecin
         fields = [
             'id',
-            'nom',
-            'prenom',
-            'numero_telephone',
-            'adresse',
-            'ville',
+            'name',
+            'first_name',
+            'phone_number',
+            'address',
+            'city',
             'cni',
-            'sexe',
-            'specialite',
-            'annee_de_naissance',
-            'lieu_naissance',
-            'nationalite',
+            'sex',
+            'specialty',
+            'year_of_birth',
+            'place_of_birth',
+            'nationality',
             'email',
             'username',
             'password',
@@ -30,22 +30,22 @@ class MedecinApprenantSerializer(serializers.HyperlinkedModelSerializer):
         model = MedecinApprenant
         fields = [
             'id',
-            'nom',
-            'prenom',
-            'numero_telephone',
-            'adresse',
-            'ville',
+            'name',
+            'first_name',
+            'phone_number',
+            'address',
+            'city',
             'cni',
-            'sexe',
-            'specialite',
-            'annee_de_naissance',
-            'lieu_naissance',
-            'nationalite',
+            'sex',
+            'specialty',
+            'year_of_birth',
+            'place_of_birth',
+            'nationality',
             'email',
             'username',
             'password',
             'experience',
-            'niveau_connaissance',
+            'knowledge_level',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -56,17 +56,17 @@ class MedecinExpertSerializer(serializers.HyperlinkedModelSerializer):
         model = MedecinExpert
         fields = [
             'id',
-            'nom',
-            'prenom',
-            'numero_telephone',
-            'adresse',
-            'ville',
+            'name',
+            'first_name',
+            'phone_number',
+            'address',
+            'city',
             'cni',
-            'sexe',
-            'specialite',
-            'annee_de_naissance',
-            'lieu_naissance',
-            'nationalite',
+            'sex',
+            'specialty',
+            'year_of_birth',
+            'place_of_birth',
+            'nationality',
             'email',
             'username',
             'password',
@@ -78,14 +78,14 @@ class MedecinExpertSerializer(serializers.HyperlinkedModelSerializer):
 
 class LogSerializer(serializers.HyperlinkedModelSerializer):
 
-    medecin = MedecinSerializer(read_only=True)
+   
 
     class Meta:
         model = Log
         fields = [
             'id',
             'operation',
-            'medecin',
+            'doctor',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -96,11 +96,11 @@ class PatientVirtuelSerializer(serializers.HyperlinkedModelSerializer):
         model = PatientVirtuel
         fields = [
             'id',
-            'sexe',
-            'etat_civil',
-            'age_min',
-            'age_max',
-            'poids',
+            'sex',
+            'civil_status',
+            'min_age',
+            'max_age',
+            'weight',
             'modele_3D',
             'created_at',
             'deleted_at',
@@ -112,11 +112,11 @@ class CasCliniqueSerializer(serializers.HyperlinkedModelSerializer):
         model = CasClinique
         fields = [
             'id',
-            'probleme_initial',
-            'difficulte',
-            'diagnostic_final',
-            'systeme',
-            'specialite',
+            'initial_problem',
+            'difficulty',
+            'final_diagnosis',
+            'system',
+            'specialty',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -124,15 +124,13 @@ class CasCliniqueSerializer(serializers.HyperlinkedModelSerializer):
 
 class CasVirtuelSerializer(serializers.HyperlinkedModelSerializer):
 
-    cas_clinique = CasCliniqueSerializer(read_only=True)
-    patient_virtuel = PatientVirtuelSerializer(read_only=True)
 
     class Meta:
         model = CasVirtuel
         fields = [
             'id',
-            'patient_virtuel',
-            'cas_clinique',
+            'virtual_patient',
+            'clinical_case',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -140,14 +138,13 @@ class CasVirtuelSerializer(serializers.HyperlinkedModelSerializer):
 
 class FeedbackSerializer(serializers.HyperlinkedModelSerializer):
 
-    medecin_expert = MedecinExpertSerializer(read_only=True)
 
     class Meta:
         model = Feedback
         fields = [
             'id',
-            'commentaire',
-            'medecin_expert',
+            'comment',
+            'expert_physician',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -155,19 +152,16 @@ class FeedbackSerializer(serializers.HyperlinkedModelSerializer):
 
 class EvaluationSerializer(serializers.HyperlinkedModelSerializer):
 
-    medecin_apprenant = MedecinApprenantSerializer(read_only=True)
-    cas_virtuel = CasVirtuelSerializer(read_only=True)
-    feedback = FeedbackSerializer(read_only=True)
 
     class Meta:
         model = Evaluation
         fields = [
             'id',
             'type',
+            'mark',
             'note',
-            'remarque',
-            'medecin_apprenant',
-            'cas_virtuel',
+            'learner_physician',
+            'virtual_case',
             'feedback',
             'created_at',
             'deleted_at',
@@ -176,15 +170,13 @@ class EvaluationSerializer(serializers.HyperlinkedModelSerializer):
 
 class HypotheseSerializer(serializers.HyperlinkedModelSerializer):
 
-    medecin_apprenant = MedecinApprenantSerializer(read_only=True)
-    evaluation = EvaluationSerializer(read_only=True)
 
     class Meta:
         model = Hypothese
         fields = [
             'id',
             'description',
-            'medecin_apprenant',
+            'learner_physician',
             'evaluation',
             'created_at',
             'deleted_at',
@@ -193,16 +185,14 @@ class HypotheseSerializer(serializers.HyperlinkedModelSerializer):
 
 class QuestionSerializer(serializers.HyperlinkedModelSerializer):
 
-    medecin_apprenant = MedecinApprenantSerializer(read_only=True)
-    evaluation = EvaluationSerializer(read_only=True)
 
     class Meta:
         model = Question
         fields = [
             'id',
             'question',
-            'reponse',
-            'medecin_apprenant',
+            'answer',
+            'learner_physician',
             'evaluation',
             'created_at',
             'deleted_at',
@@ -211,18 +201,17 @@ class QuestionSerializer(serializers.HyperlinkedModelSerializer):
 
 class InfosPersonnellesSerializer(serializers.HyperlinkedModelSerializer):
 
-    cas_clinique = CasCliniqueSerializer(read_only=True)
 
     class Meta:
         model = InfosPersonnelles
         fields = [
             'id',
-            'sexe',
-            'etat_civil',
+            'sex',
+            'civil_status',
             'profession',
-            'nbre_enfant',
-            'groupe_sanguin',
-            'cas_clinique',
+            'nb_child',
+            'blood_group',
+            'clinical_case',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -230,18 +219,17 @@ class InfosPersonnellesSerializer(serializers.HyperlinkedModelSerializer):
 
 class TraitementEnCoursSerializer(serializers.HyperlinkedModelSerializer):
 
-    cas_clinique = CasCliniqueSerializer(read_only=True)
 
     class Meta:
         model = TraitementEnCours
         fields = [
             'id',
-            'nom',
-            'mode_transmission',
-            'date_debut',
+            'name',
+            'transmission_mode',
+            'start_time',
             'observation',
-            'efficacite',
-            'cas_clinique',
+            'efficiency',
+            'clinical_case',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -249,16 +237,14 @@ class TraitementEnCoursSerializer(serializers.HyperlinkedModelSerializer):
 
 class DiagnosticPhysiqueSerializer(serializers.HyperlinkedModelSerializer):
 
-    cas_clinique = CasCliniqueSerializer(read_only=True)
-
     class Meta:
         model = DiagnosticPhysique
         fields = [
             'id',
-            'diagnostic_physique',
-            'resultat',
-            'fichier',
-            'cas_clinique',
+            'physical_diagnosis',
+            'result',
+            'file',
+            'clinical_case',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -266,15 +252,13 @@ class DiagnosticPhysiqueSerializer(serializers.HyperlinkedModelSerializer):
 
 class ExamenSerializer(serializers.HyperlinkedModelSerializer):
 
-    cas_clinique = CasCliniqueSerializer(read_only=True)
-
     class Meta:
         model = Examen
         fields = [
             'id',
             'description',
-            'resultat',
-            'cas_clinique',
+            'result',
+            'clinical_case',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -282,17 +266,15 @@ class ExamenSerializer(serializers.HyperlinkedModelSerializer):
 
 class ExamenPhysiqueSerializer(serializers.HyperlinkedModelSerializer):
 
-    cas_clinique = CasCliniqueSerializer(read_only=True)
-
     class Meta:
         model = ExamenPhysique
         fields = [
             'id',
             'description',
-            'resultat',
-            'cas_clinique',
-            'anatomie',
-            'type_resultat',
+            'result',
+            'clinical_case',
+            'anatomy',
+            'type_result',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -300,14 +282,12 @@ class ExamenPhysiqueSerializer(serializers.HyperlinkedModelSerializer):
 
 class MediaSerializer(serializers.HyperlinkedModelSerializer):
 
-    examen = ExamenSerializer(read_only=True)
-
     class Meta:
         model = Media
         fields = [
             'id',
-            'fichier',
-            'examen',
+            'file',
+            'exam',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -319,8 +299,8 @@ class TypeParametreSerializer(serializers.HyperlinkedModelSerializer):
         model = TypeParametre
         fields = [
             'id',
-            'nom',
-            'unite',
+            'name',
+            'unit',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -328,17 +308,14 @@ class TypeParametreSerializer(serializers.HyperlinkedModelSerializer):
 
 class ParametreMedicalSerializer(serializers.HyperlinkedModelSerializer):
 
-    cas_clinique = CasCliniqueSerializer(read_only=True)
-    type_parametre = TypeParametreSerializer(read_only=True)
-
     class Meta:
         model = ParametreMedical
         fields = [
             'id',
-            'valeur',
+            'value',
             'commantaire',
-            'type_parametre',
-            'cas_clinique',
+            'type_parameter',
+            'clinical_case',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -346,16 +323,14 @@ class ParametreMedicalSerializer(serializers.HyperlinkedModelSerializer):
 
 class ModeVieSerializer(serializers.HyperlinkedModelSerializer):
 
-    cas_clinique = CasCliniqueSerializer(read_only=True)
-
     class Meta:
         model = ModeVie
         fields = [
             'id',
-            'qualite_eau',
-            'moustiquaire',
-            'animal_compagnie',
-            'cas_clinique',
+            'water_quality',
+            'mosquito',
+            'pet_company',
+            'clinical_case',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -363,15 +338,13 @@ class ModeVieSerializer(serializers.HyperlinkedModelSerializer):
 
 class ActivitePhysiqueSerializer(serializers.HyperlinkedModelSerializer):
 
-    mode_vie = ModeVieSerializer(read_only=True)
-
     class Meta:
         model = ActivitePhysique
         fields = [
             'id',
-            'nom',
-            'frequence',
-            'mode_vie',
+            'name',
+            'frequency',
+            'life_style',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -379,17 +352,15 @@ class ActivitePhysiqueSerializer(serializers.HyperlinkedModelSerializer):
     
 class AddictionSerializer(serializers.HyperlinkedModelSerializer):
 
-    mode_vie = ModeVieSerializer(read_only=True)
-
     class Meta:
         model = Addiction
         fields = [
             'id',
-            'nom',
-            'frequence',
-            'duree',
-            'debut',
-            'mode_vie',
+            'name',
+            'frequency',
+            'duration',
+            'start',
+            'life_style',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -397,16 +368,14 @@ class AddictionSerializer(serializers.HyperlinkedModelSerializer):
 
 class VoyageSerializer(serializers.HyperlinkedModelSerializer):
 
-    mode_vie = ModeVieSerializer(read_only=True)
-
     class Meta:
         model = Voyage
         fields = [
             'id',
-            'lieu',
-            'frequence',
-            'duree',
-            'mode_vie',
+            'location',
+            'frequency',
+            'duration',
+            'life_style',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -414,19 +383,17 @@ class VoyageSerializer(serializers.HyperlinkedModelSerializer):
 
 class SymptomeSerializer(serializers.HyperlinkedModelSerializer):
 
-    cas_clinique = CasCliniqueSerializer(read_only=True)
-
     class Meta:
         model = Symptome
         fields = [
             'id',
             'localisation',
-            'frequence',
-            'duree',
-            'date_debut',
+            'frequency',
+            'duration',
+            'start_time',
             'evolution',
-            'activite_declenchante',
-            'cas_clinique',
+            'triggering_activity',
+            'clinical_case',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -434,15 +401,13 @@ class SymptomeSerializer(serializers.HyperlinkedModelSerializer):
 
 class DescriptionSymptomeSerializer(serializers.HyperlinkedModelSerializer):
 
-    symptome = SymptomeSerializer(read_only=True)
-
     class Meta:
         model = DescriptionSymptome
         fields = [
             'id',
-            'degre',
-            'fonction_physiologique',
-            'symptome',
+            'degree',
+            'physiological_function',
+            'symptom',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -450,14 +415,12 @@ class DescriptionSymptomeSerializer(serializers.HyperlinkedModelSerializer):
 
 class ConceptSerializer(serializers.HyperlinkedModelSerializer):
 
-    cas_clinique = CasCliniqueSerializer(read_only=True)
-
     class Meta:
         model = Concept
         fields = [
             'id',
-            'nom',
-            'cas_clinique',
+            'name',
+            'clinical_case',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -465,14 +428,12 @@ class ConceptSerializer(serializers.HyperlinkedModelSerializer):
 
 class AntecedentMedicalSerializer(serializers.HyperlinkedModelSerializer):
 
-    cas_clinique = CasCliniqueSerializer(read_only=True)
-
     class Meta:
         model = AntecedentMedical
         fields = [
             'id',
-            'antecedents_familiaux',
-            'cas_clinique',
+            'family_antecedents',
+            'clinical_case',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -480,15 +441,13 @@ class AntecedentMedicalSerializer(serializers.HyperlinkedModelSerializer):
 
 class AntecedentObstetricalSerializer(serializers.HyperlinkedModelSerializer):
 
-    antecedent_medical = AntecedentMedicalSerializer(read_only=True)
-
     class Meta:
         model = AntecedentObstetrical
         fields = [
             'id',
-            'nbre_grossesse',
-            'date_dernier_grossesse',
-            'antecedent_medical',
+            'nb_pregnancy',
+            'date_of_last_pregnancy',
+            'medical_antecedent',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -496,15 +455,13 @@ class AntecedentObstetricalSerializer(serializers.HyperlinkedModelSerializer):
 
 class ChirurgieSerializer(serializers.HyperlinkedModelSerializer):
 
-    antecedent_medical = AntecedentMedicalSerializer(read_only=True)
-
     class Meta:
         model = Chirurgie
         fields = [
             'id',
-            'nom',
+            'name',
             'date',
-            'antecedent_medical',
+            'medical_antecedent',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -512,15 +469,13 @@ class ChirurgieSerializer(serializers.HyperlinkedModelSerializer):
 
 class AllergieSerializer(serializers.HyperlinkedModelSerializer):
 
-    antecedent_medical = AntecedentMedicalSerializer(read_only=True)
-
     class Meta:
         model = Allergie
         fields = [
             'id',
             'manifestation',
-            'declencheur',
-            'antecedent_medical',
+            'trigger',
+            'medical_antecedent',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -532,9 +487,9 @@ class TraitementSerializer(serializers.HyperlinkedModelSerializer):
         model = Traitement
         fields = [
             'id',
-            'nom',
-            'duree',
-            'posologie',
+            'name',
+            'duration',
+            'posology',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -542,19 +497,16 @@ class TraitementSerializer(serializers.HyperlinkedModelSerializer):
 
 class MaladieSerializer(serializers.HyperlinkedModelSerializer):
 
-    antecedent_medical = AntecedentMedicalSerializer(read_only=True)
-    traitement = TraitementSerializer(read_only=True)
-
     class Meta:
         model = Maladie
         fields = [
             'id',
-            'nom',
-            'date_debut',
-            'date_fin',
+            'name',
+            'start_time',
+            'end_time',
             'observation',
-            'antecedent_medical',
-            'traitement',
+            'medical_antecedent',
+            'treatment',
             'created_at',
             'deleted_at',
             'updated_at'
