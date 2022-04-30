@@ -1,12 +1,11 @@
-from django.urls import path, include
-from django.conf.urls import url
+from django.urls import path, include, re_path
+#from django.conf.urls import url
 from rest_framework import routers
 
 from . import views
 
 routers = routers.DefaultRouter()
 routers.register(r'medecin', views.MedecinViewSet)
-#routers.register(r'personne', views.PersonneViewSet)
 routers.register(r'medecin-apprenant', views.MedecinApprenantViewSet)
 routers.register(r'medecin-expert', views.MedecinExpertViewSet)
 routers.register(r'log', views.LogViewSet)
@@ -43,6 +42,6 @@ urlpatterns = [
     path('', include(routers.urls)),
 
 
-    url(r'^[a-zA-Z0-9/,;:!\\*-+^$ù&é(-è_çà)]+/$', views.errorPage),
+    re_path(r'^[a-zA-Z0-9/,;:!\\*-+^$ù&é(-è_çà)]+/$', views.errorPage),
     
 ]

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import random
 from datetime import datetime, timedelta
 from uuid import uuid4
@@ -141,3 +141,19 @@ class TraitementViewSet(viewsets.ModelViewSet):
 class MaladieViewSet(viewsets.ModelViewSet):
     queryset = Maladie.objects.all()
     serializer_class = MaladieSerializer
+
+@api_view(['GET'])
+def errorPage(request):
+    """
+                Cette vue est renvoyé lorsque aucune url ne correspond a celle appelé
+        """
+    result = {
+        "status": False,
+        "message": "Vérifiez votre URL",
+        "data": {}
+    }
+    return Response(result, status=status.HTTP_404_NOT_FOUND)
+
+
+def root(request):
+    return redirect('/api')
