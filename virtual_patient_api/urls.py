@@ -31,16 +31,16 @@ def root(request):
     """
     
     return Response({
-        "PATIENT VIRTUEL API": request.build_absolute_uri() + 'patient-virtuel/',
-        "MODULE EXPERT": request.build_absolute_uri() + 'module-expert/'
+        "VIRTUAL PATIENT API": request.build_absolute_uri() + 'virtual-patient/',
+        "EXPERT MODULE": request.build_absolute_uri() + 'expert-module/'
     })
 
 urlpatterns = [
     path('', viewsPatient.root),
     path('', viewsExpert.root),
     path('api/', root),
-    path('api/patient-virtuel/', include('patient_app.urls')),
-    path('api/module-expert/', include('expert_app.urls')),
+    path('api/virtual-patient/', include('patient_app.urls')),
+    path('api/expert-module/', include('expert_app.urls')),
 
     path('admin/', admin.site.urls),
 ]

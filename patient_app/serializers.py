@@ -1,7 +1,7 @@
 from .models import *
 from rest_framework import serializers
 
-class MedecinSerializer(serializers.HyperlinkedModelSerializer):
+class DoctorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Doctor
         fields = [
@@ -25,9 +25,9 @@ class MedecinSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class MedecinApprenantSerializer(serializers.HyperlinkedModelSerializer):
+class LeanerPhysicianSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = MedecinApprenant
+        model = LeanerPhysician
         fields = [
             'id',
             'name',
@@ -51,9 +51,9 @@ class MedecinApprenantSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class MedecinExpertSerializer(serializers.HyperlinkedModelSerializer):
+class ExpertPhysicianSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = MedecinExpert
+        model = ExpertPhysician
         fields = [
             'id',
             'name',
@@ -91,9 +91,9 @@ class LogSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class PatientVirtuelSerializer(serializers.HyperlinkedModelSerializer):
+class VirtualPatientSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = PatientVirtuel
+        model = VirtualPatient
         fields = [
             'id',
             'sex',
@@ -107,9 +107,9 @@ class PatientVirtuelSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class CasCliniqueSerializer(serializers.HyperlinkedModelSerializer):
+class ClinicalCaseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = CasClinique
+        model = ClinicalCase
         fields = [
             'id',
             'initial_problem',
@@ -122,11 +122,11 @@ class CasCliniqueSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class CasVirtuelSerializer(serializers.HyperlinkedModelSerializer):
+class VirtualCaseSerializer(serializers.HyperlinkedModelSerializer):
 
 
     class Meta:
-        model = CasVirtuel
+        model = VirtualCase
         fields = [
             'id',
             'virtual_patient',
@@ -168,11 +168,11 @@ class EvaluationSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class HypotheseSerializer(serializers.HyperlinkedModelSerializer):
+class HypothesisSerializer(serializers.HyperlinkedModelSerializer):
 
 
     class Meta:
-        model = Hypothese
+        model = Hypothesis
         fields = [
             'id',
             'description',
@@ -199,11 +199,11 @@ class QuestionSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class InfosPersonnellesSerializer(serializers.HyperlinkedModelSerializer):
+class PersonalInfoSerializer(serializers.HyperlinkedModelSerializer):
 
 
     class Meta:
-        model = InfosPersonnelles
+        model = PersonalInfo
         fields = [
             'id',
             'sex',
@@ -217,11 +217,11 @@ class InfosPersonnellesSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class TraitementEnCoursSerializer(serializers.HyperlinkedModelSerializer):
+class TreatmentInProgressSerializer(serializers.HyperlinkedModelSerializer):
 
 
     class Meta:
-        model = TraitementEnCours
+        model = TreatmentInProgress
         fields = [
             'id',
             'name',
@@ -235,10 +235,10 @@ class TraitementEnCoursSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class DiagnosticPhysiqueSerializer(serializers.HyperlinkedModelSerializer):
+class DiagnosisPhysicsSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = DiagnosticPhysique
+        model = DiagnosisPhysics
         fields = [
             'id',
             'physical_diagnosis',
@@ -250,10 +250,10 @@ class DiagnosticPhysiqueSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class ExamenSerializer(serializers.HyperlinkedModelSerializer):
+class ExamSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = Examen
+        model = Exam
         fields = [
             'id',
             'description',
@@ -264,10 +264,10 @@ class ExamenSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class ExamenPhysiqueSerializer(serializers.HyperlinkedModelSerializer):
+class ExamPhysicsSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = ExamenPhysique
+        model = ExamPhysics
         fields = [
             'id',
             'description',
@@ -293,10 +293,10 @@ class MediaSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class TypeParametreSerializer(serializers.HyperlinkedModelSerializer):
+class TypeParameterSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = TypeParametre
+        model = TypeParameter
         fields = [
             'id',
             'name',
@@ -306,10 +306,10 @@ class TypeParametreSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class ParametreMedicalSerializer(serializers.HyperlinkedModelSerializer):
+class MedicalParameterSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = ParametreMedical
+        model = MedicalParameter
         fields = [
             'id',
             'value',
@@ -321,10 +321,10 @@ class ParametreMedicalSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class ModeVieSerializer(serializers.HyperlinkedModelSerializer):
+class LifeStyleSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = ModeVie
+        model = LifeStyle
         fields = [
             'id',
             'water_quality',
@@ -336,10 +336,10 @@ class ModeVieSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class ActivitePhysiqueSerializer(serializers.HyperlinkedModelSerializer):
+class PhysicalActivitySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = ActivitePhysique
+        model = PhysicalActivity
         fields = [
             'id',
             'name',
@@ -366,10 +366,10 @@ class AddictionSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class VoyageSerializer(serializers.HyperlinkedModelSerializer):
+class TravelSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = Voyage
+        model = Travel
         fields = [
             'id',
             'location',
@@ -381,10 +381,10 @@ class VoyageSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class SymptomeSerializer(serializers.HyperlinkedModelSerializer):
+class SymptomSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = Symptome
+        model = Symptom
         fields = [
             'id',
             'localisation',
@@ -399,10 +399,10 @@ class SymptomeSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class DescriptionSymptomeSerializer(serializers.HyperlinkedModelSerializer):
+class DescriptionSymptomSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = DescriptionSymptome
+        model = DescriptionSymptom
         fields = [
             'id',
             'degree',
@@ -426,10 +426,10 @@ class ConceptSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class AntecedentMedicalSerializer(serializers.HyperlinkedModelSerializer):
+class MedicalAntecedentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = AntecedentMedical
+        model = MedicalAntecedent
         fields = [
             'id',
             'family_antecedents',
@@ -439,10 +439,10 @@ class AntecedentMedicalSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class AntecedentObstetricalSerializer(serializers.HyperlinkedModelSerializer):
+class ObstetricalAntecedentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = AntecedentObstetrical
+        model = ObstetricalAntecedent
         fields = [
             'id',
             'nb_pregnancy',
@@ -453,10 +453,10 @@ class AntecedentObstetricalSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class ChirurgieSerializer(serializers.HyperlinkedModelSerializer):
+class SurgerySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = Chirurgie
+        model = Surgery
         fields = [
             'id',
             'name',
@@ -467,10 +467,10 @@ class ChirurgieSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class AllergieSerializer(serializers.HyperlinkedModelSerializer):
+class AllergySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = Allergie
+        model = Allergy
         fields = [
             'id',
             'manifestation',
@@ -481,10 +481,10 @@ class AllergieSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class TraitementSerializer(serializers.HyperlinkedModelSerializer):
+class TreatmentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = Traitement
+        model = Treatment
         fields = [
             'id',
             'name',
@@ -495,10 +495,10 @@ class TraitementSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class MaladieSerializer(serializers.HyperlinkedModelSerializer):
+class DiseaseSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = Maladie
+        model = Disease
         fields = [
             'id',
             'name',

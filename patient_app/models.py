@@ -43,7 +43,7 @@ class Doctor(models.Model):
     def __str__(self):
         return self.name + " " + self.first_name + " " + str(self.year_of_birth)
 
-class MedecinApprenant(Doctor):
+class LeanerPhysician(Doctor):
     EXPERIENCE = (
         ("Beginner", "Beginner"),
         ("Intermediate", "Intermediate"),
@@ -53,7 +53,7 @@ class MedecinApprenant(Doctor):
     experience = models.CharField(max_length=20, choices=EXPERIENCE)
     knowledge_level = models.DecimalField(default=0.0, null=True, decimal_places=2, max_digits=6)
 
-class MedecinExpert(Doctor):
+class ExpertPhysician(Doctor):
     GRADE = (
         ('GP', 'Generalist Physician'),
         ('SP', 'Specialist Physician'),
@@ -76,7 +76,7 @@ class Log(models.Model):
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class PatientVirtuel(models.Model):
+class VirtualPatient(models.Model):
 
     SEX = (
         ('M', 'Male'),
@@ -100,7 +100,7 @@ class PatientVirtuel(models.Model):
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class CasClinique(models.Model):
+class ClinicalCase(models.Model):
 
     DIFFICULTE = (
         ('EASY', 'EASY'),
@@ -132,10 +132,10 @@ class CasClinique(models.Model):
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class CasVirtuel(models.Model):
+class VirtualCase(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    virtual_patient = models.ForeignKey(PatientVirtuel, on_delete=models.SET_NULL, null=True)
-    clinical_case = models.ForeignKey(CasClinique, on_delete=models.SET_NULL, null=True)
+    virtual_patient = models.ForeignKey(VirtualPatient, on_delete=models.SET_NULL, null=True)
+    clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
@@ -144,7 +144,7 @@ class CasVirtuel(models.Model):
 class Feedback(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     comment = models.TextField(blank=True)
-    expert_physician = models.ForeignKey(MedecinExpert, on_delete=models.SET_NULL, null=True)
+    expert_physician = models.ForeignKey(ExpertPhysician, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
@@ -160,18 +160,18 @@ class Evaluation(models.Model):
     type = models.CharField(max_length=20, choices=TYPE)
     mark = models.DecimalField(default=0.0, null=True, decimal_places=2, max_digits=5)
     note = models.TextField(blank=True)
-    learner_physician = models.ForeignKey(MedecinApprenant, on_delete=models.SET_NULL, null=True)
-    virtual_case = models.ForeignKey(CasVirtuel, on_delete=models.SET_NULL, null=True)
+    learner_physician = models.ForeignKey(LeanerPhysician, on_delete=models.SET_NULL, null=True)
+    virtual_case = models.ForeignKey(VirtualCase, on_delete=models.SET_NULL, null=True)
     feedback = models.ForeignKey(Feedback, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class Hypothese(models.Model):
+class Hypothesis(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     description = models.TextField(blank=False)
-    learner_physician = models.ForeignKey(MedecinApprenant, on_delete=models.SET_NULL, null=True)
+    learner_physician = models.ForeignKey(LeanerPhysician, on_delete=models.SET_NULL, null=True)
     evaluation = models.ForeignKey(Evaluation, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
@@ -182,14 +182,14 @@ class Question(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     question = models.TextField(blank=False)
     answer = models.TextField(blank=False)
-    learner_physician = models.ForeignKey(MedecinApprenant, on_delete=models.SET_NULL, null=True)
+    learner_physician = models.ForeignKey(LeanerPhysician, on_delete=models.SET_NULL, null=True)
     evaluation = models.ForeignKey(Evaluation, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
 # Information du cas clinique
-class InfosPersonnelles(models.Model):
+class PersonalInfo(models.Model):
     SEX = (
         ('M', 'Male'),
         ('F', 'Female'),
@@ -201,7 +201,7 @@ class InfosPersonnelles(models.Model):
         ('DIVORCE', 'DIVORCE')
     )
 
-    GROUPE_SANGUIN = (
+    BLOOD_GROUP = (
         ('A+', 'A+'),
         ('A-', 'A-'),
         ('B+', 'B+'),
@@ -217,27 +217,27 @@ class InfosPersonnelles(models.Model):
     civil_status = models.CharField(choices=CIVIL_STATUS, max_length=50)
     profession = models.CharField(max_length=100, null=True)
     nb_child = models.IntegerField(null=True)
-    blood_group = models.CharField(choices=GROUPE_SANGUIN, null=True, max_length=50)
-    clinical_case = models.ForeignKey(CasClinique, on_delete=models.CASCADE, null=False)
+    blood_group = models.CharField(choices=BLOOD_GROUP, null=True, max_length=50)
+    clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class TraitementEnCours(models.Model):
+class TreatmentInProgress(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50, null=False)
     transmission_mode = models.CharField(max_length=100)
     start_time = models.DateField(null=False)
     observation = models.TextField(blank=True)
     efficiency = models.CharField(max_length=50, null=True)
-    clinical_case = models.ForeignKey(CasClinique, on_delete=models.CASCADE, null=False)
+    clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class DiagnosticPhysique(models.Model):
+class DiagnosisPhysics(models.Model):
 
-    DIAGNOSTIC_PHYSIQUE = (
+    DIAGNOSIS_PHYSICS = (
         ('PALPATION', 'PALPATION'),
         ('OSCULTATION', 'OSCULTATION'),
         ('PERCUTION', 'PERCUTION'),
@@ -245,36 +245,36 @@ class DiagnosticPhysique(models.Model):
     )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    physical_diagnosis = models.CharField(max_length=50, choices=DIAGNOSTIC_PHYSIQUE)
+    physical_diagnosis = models.CharField(max_length=50, choices=DIAGNOSIS_PHYSICS)
     result = models.TextField(blank=False)
     file = models.FileField(null=True)
-    clinical_case = models.ForeignKey(CasClinique, on_delete=models.CASCADE, null=False)
+    clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class Examen(models.Model):
+class Exam(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     description = models.TextField(blank=False)
     result = models.TextField(blank=False)
-    clinical_case = models.ForeignKey(CasClinique, on_delete=models.CASCADE, null=False)
+    clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class ExamenPhysique(Examen):
+class ExamPhysics(Exam):
     anatomy = models.CharField(max_length=50)
     type_result = models.CharField(max_length=50, null=True)
 
 class Media(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     file = models.FileField(null=False)
-    exam = models.ForeignKey(Examen, on_delete=models.CASCADE, null=False)
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class TypeParametre(models.Model):
+class TypeParameter(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=30)
@@ -285,12 +285,12 @@ class TypeParametre(models.Model):
 
     def __str__(self):
         return self.name + " en " + self.unit
-class ParametreMedical(models.Model):
+class MedicalParameter(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     value = models.DecimalField(max_digits=10, decimal_places=2)
     comment = models.TextField(blank=True)
-    type_parameter = models.ForeignKey(TypeParametre, on_delete=models.CASCADE, null=False)
-    clinical_case = models.ForeignKey(CasClinique, on_delete=models.CASCADE, null=False)
+    type_parameter = models.ForeignKey(TypeParameter, on_delete=models.CASCADE, null=False)
+    clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
@@ -298,21 +298,21 @@ class ParametreMedical(models.Model):
     def __str__(self):
         return self.type_parameter.name + " = " + self.value + " " + self.type_parameter.unit
 
-class ModeVie(models.Model):
+class LifeStyle(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     water_quality = models.CharField(max_length=50, null=True)
     mosquito = models.BooleanField(null=False)
     pet_company = models.CharField(max_length=50, null=True)
-    clinical_case = models.ForeignKey(CasClinique, on_delete=models.CASCADE, null=False)
+    clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class ActivitePhysique(models.Model):
+class PhysicalActivity(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
     frequency = models.CharField(max_length=50)
-    life_style = models.ForeignKey(ModeVie, on_delete=models.CASCADE, null=False)
+    life_style = models.ForeignKey(LifeStyle, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
@@ -323,22 +323,22 @@ class Addiction(models.Model):
     frequency = models.CharField(max_length=50)
     duration = models.CharField(max_length=50, null=True)
     start = models.DateField(null=True)
-    life_style = models.ForeignKey(ModeVie, on_delete=models.CASCADE, null=False)
+    life_style = models.ForeignKey(LifeStyle, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class Voyage(models.Model):
+class Travel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     location = models.CharField(max_length=50)
     frequency = models.CharField(max_length=50)
     duration = models.CharField(max_length=50, null=True)
-    life_style = models.ForeignKey(ModeVie, on_delete=models.CASCADE, null=False)
+    life_style = models.ForeignKey(LifeStyle, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class Symptome(models.Model):
+class Symptom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     localisation = models.CharField(max_length=100)
     frequency = models.CharField(max_length=100)
@@ -346,16 +346,16 @@ class Symptome(models.Model):
     start_time = models.DateField(null=True)
     evolution = models.CharField(max_length=150)
     triggering_activity = models.CharField(max_length=100)
-    clinical_case = models.ForeignKey(CasClinique, on_delete=models.CASCADE, null=False)
+    clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class DescriptionSymptome(models.Model):
+class DescriptionSymptom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     degree = models.CharField(max_length=100)
     physiological_function = models.CharField(max_length=100)
-    symptom = models.ForeignKey(Symptome, on_delete=models.CASCADE, null=False)
+    symptom = models.ForeignKey(Symptom, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
@@ -363,47 +363,47 @@ class DescriptionSymptome(models.Model):
 class Concept(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
-    clinical_case = models.ForeignKey(CasClinique, on_delete=models.CASCADE, null=False)
+    clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class AntecedentMedical(models.Model):
+class MedicalAntecedent(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     family_antecedents = models.CharField(max_length=100)
-    clinical_case = models.ForeignKey(CasClinique, on_delete=models.CASCADE, null=False)
+    clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class AntecedentObstetrical(models.Model):
+class ObstetricalAntecedent(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     nb_pregnancy = models.IntegerField()
     date_of_last_pregnancy = models.DateField(null=True)
-    medical_antecedent = models.ForeignKey(AntecedentMedical, on_delete=models.CASCADE, null=False)
+    medical_antecedent = models.ForeignKey(MedicalAntecedent, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class Chirurgie(models.Model):
+class Surgery(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     date = models.DateField(null=True)
-    medical_antecedent = models.ForeignKey(AntecedentMedical, on_delete=models.CASCADE, null=False)
+    medical_antecedent = models.ForeignKey(MedicalAntecedent, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class Allergie(models.Model):
+class Allergy(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     manifestation = models.TextField(blank=False)
     trigger = models.CharField(max_length=200, null=True)
-    medical_antecedent = models.ForeignKey(AntecedentMedical, on_delete=models.CASCADE, null=False)
+    medical_antecedent = models.ForeignKey(MedicalAntecedent, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class Traitement(models.Model):
+class Treatment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     duration = models.CharField(max_length=150 ,null=True)
@@ -412,14 +412,14 @@ class Traitement(models.Model):
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class Maladie(models.Model):
+class Disease(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     start_time = models.DateField(null=True)
     end_time = models.DateField(null=True)
     observation = models.TextField(blank=True)
-    medical_antecedent = models.ForeignKey(AntecedentMedical, on_delete=models.CASCADE, null=False)
-    treatment = models.ForeignKey(Traitement, on_delete=models.CASCADE, null=False)
+    medical_antecedent = models.ForeignKey(MedicalAntecedent, on_delete=models.CASCADE, null=False)
+    treatment = models.ForeignKey(Treatment, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)

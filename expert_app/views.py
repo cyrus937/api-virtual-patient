@@ -18,13 +18,11 @@ import pyAgrum as gum
 
 # Create your views here.
 
-# Réseau bayésien
-# Importation du réseau bayésien
 print("")
-print("Importation du réseau bayésien")
+print("Importing the Bayesian network")
 bn=gum.loadBN("virtual_patient_api\media\Bayesian_network.bif")
 print("")
-print("Importation réussie")
+print("Successful import")
 print("")
 
 list_diseases = ['Malaria', 'Tuberculosis', 'Diabetes_', 'Typhoid', 'hepatitis_A', 'Hepatitis_B', 'Hypoglycemia', 'Common_Cold', 'Chicken_pox', 'Pneumonia']
@@ -43,7 +41,7 @@ def Convert(tup, di):
   return di
 
 @api_view(['POST'])
-def inference_maladie_symptoms(request):
+def inference_disease_symptoms(request):
   res = {}
   symp = {}
   body = json.loads(request.body)
@@ -75,11 +73,11 @@ def inference_maladie_symptoms(request):
 @api_view(['GET'])
 def errorPage(request):
     """
-      Cette vue est renvoyé lorsque aucune url ne correspond a celle appelé
+      This view is returned when no url matches the one called
     """
     result = {
       "status": False,
-      "message": "Vérifiez votre URL",
+      "message": "Check your URL",
       "data": {}
     }
     return Response(result, status=status.HTTP_404_NOT_FOUND)
