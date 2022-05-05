@@ -56,7 +56,18 @@ class TokenObtainSerializer(TokenObtainPairSerializer):
         data["access"] = str(refresh.access_token)
         data["test"] = "value"
         serializer = DoctorSerializer(queryset)
-        data["User"] = serializer.data
+        try:
+            que1 = LeanerPhysician.objects.get(username=username, password=password)
+            serializer = LeanerPhysicianSerializer(que1)
+        except:
+            print("Ce n'est pas un apprenant")
+            try:
+                que2 = ExpertPhysician.objects.get(username=username, password=password)
+                serializer = ExpertPhysicianSerializer(que2)
+            except:
+                print("ce n'est pas un expet")
+            
+        data["Doctor"] = serializer.data
 
         return data
 

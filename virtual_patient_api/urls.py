@@ -43,8 +43,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/login/', viewsPatient.CutomObtainPairView.as_view(), name='login'),
     path('api/auth/refresh-token/', TokenRefreshView.as_view, name='refreshtoken'),
-    #path('', viewsPatient.root),
-    #path('', viewsExpert.root),
+    path('', viewsPatient.root),
+    path('', viewsExpert.root),
     path('api/virtual-patient/', include('patient_app.urls')),
     path('api/expert-module/', include('expert_app.urls')),
 ]
