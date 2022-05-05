@@ -273,11 +273,19 @@ class PersonalInfo(models.Model):
 class TreatmentInProgress(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50, null=False)
-    transmission_mode = models.CharField(max_length=100)
+    administration_mode = models.CharField(max_length=100)
     start_time = models.DateField(null=False)
     observation = models.TextField(blank=True)
     efficiency = models.CharField(max_length=50, null=True)
     clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.CASCADE, null=False)
+    created_at = models.DateTimeField(null=False, auto_now_add=True)
+    deleted_at = models.DateTimeField(null=False, auto_now_add=True)
+    updated_at = models.DateTimeField(null=False, auto_now=True)
+
+class Media(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=150, null=False)
+    file = models.FileField(null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
@@ -294,7 +302,7 @@ class DiagnosisPhysics(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     physical_diagnosis = models.CharField(max_length=50, choices=DIAGNOSIS_PHYSICS)
     result = models.TextField(blank=False)
-    file = models.FileField(null=True)
+    file = models.ForeignKey(Media, on_delete=models.CASCADE, null=True)
     clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
@@ -302,24 +310,15 @@ class DiagnosisPhysics(models.Model):
 
 class Exam(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    description = models.TextField(blank=False)
+    name = models.CharField(max_length=100, null=False)
+    anatomy = models.CharField(max_length=50)
     result = models.TextField(blank=False)
+    file = models.ForeignKey(Media, on_delete=models.CASCADE, null=True)
     clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class ExamPhysics(Exam):
-    anatomy = models.CharField(max_length=50)
-    type_result = models.CharField(max_length=50, null=True)
-
-class Media(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    file = models.FileField(null=False)
-    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, null=False)
-    created_at = models.DateTimeField(null=False, auto_now_add=True)
-    deleted_at = models.DateTimeField(null=False, auto_now_add=True)
-    updated_at = models.DateTimeField(null=False, auto_now=True)
 
 class TypeParameter(models.Model):
 
@@ -369,7 +368,6 @@ class Addiction(models.Model):
     name = models.CharField(max_length=50)
     frequency = models.CharField(max_length=50)
     duration = models.CharField(max_length=50, null=True)
-    start = models.DateField(null=True)
     life_style = models.ForeignKey(LifeStyle, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
@@ -387,22 +385,14 @@ class Travel(models.Model):
 
 class Symptom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100)
     localisation = models.CharField(max_length=100)
     frequency = models.CharField(max_length=100)
     duration = models.CharField(max_length=100, null=True)
-    start_time = models.DateField(null=True)
     evolution = models.CharField(max_length=150)
     triggering_activity = models.CharField(max_length=100)
-    clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.CASCADE, null=False)
-    created_at = models.DateTimeField(null=False, auto_now_add=True)
-    deleted_at = models.DateTimeField(null=False, auto_now_add=True)
-    updated_at = models.DateTimeField(null=False, auto_now=True)
-
-class DescriptionSymptom(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     degree = models.CharField(max_length=100)
-    physiological_function = models.CharField(max_length=100)
-    symptom = models.ForeignKey(Symptom, on_delete=models.CASCADE, null=False)
+    clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)

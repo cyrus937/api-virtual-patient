@@ -57,8 +57,8 @@ def inference_disease_symptoms(request):
     symptoms = body['symptoms']
     
     if 'disease' not in body:
-      for dis in list_diseases:
-        res[dis] = infere_network(dis, symptoms)[1]
+      for disease in list_diseases:
+        res[disease] = infere_network(disease, symptoms)[1]
 
       dic = Convert(sorted(res.items(), key=lambda x: x[1], reverse=True), {})
       res = dict(list(dic.items())[0: 5])

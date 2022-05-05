@@ -167,6 +167,10 @@ class TreatmentInProgressViewSet(viewsets.ModelViewSet):
   queryset = TreatmentInProgress.objects.all()
   serializer_class = TreatmentInProgressSerializer
 
+class MediaViewSet(viewsets.ModelViewSet):
+  queryset = Media.objects.all()
+  serializer_class = MediaSerializer
+
 class DiagnosisPhysicsViewSet(viewsets.ModelViewSet):
   queryset = DiagnosisPhysics.objects.all()
   serializer_class = DiagnosisPhysicsSerializer
@@ -174,14 +178,6 @@ class DiagnosisPhysicsViewSet(viewsets.ModelViewSet):
 class ExamViewSet(viewsets.ModelViewSet):
   queryset = Exam.objects.all()
   serializer_class = ExamSerializer
-
-class ExamPhysicsViewSet(viewsets.ModelViewSet):
-  queryset = ExamPhysics.objects.all()
-  serializer_class = ExamPhysicsSerializer
-
-class MediaViewSet(viewsets.ModelViewSet):
-  queryset = Media.objects.all()
-  serializer_class = MediaSerializer
 
 class TypeParameterViewSet(viewsets.ModelViewSet):
   queryset = TypeParameter.objects.all()
@@ -211,9 +207,6 @@ class SymptomViewSet(viewsets.ModelViewSet):
   queryset = Symptom.objects.all()
   serializer_class = SymptomSerializer
 
-class DescriptionSymptomViewSet(viewsets.ModelViewSet):
-  queryset = DescriptionSymptom.objects.all()
-  serializer_class = DescriptionSymptomSerializer
 
 class ConceptViewSet(viewsets.ModelViewSet):
   queryset = Concept.objects.all()

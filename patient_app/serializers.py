@@ -295,11 +295,24 @@ class TreatmentInProgressSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'id',
             'name',
-            'transmission_mode',
+            'administration_mode',
             'start_time',
             'observation',
             'efficiency',
             'clinical_case',
+            'created_at',
+            'deleted_at',
+            'updated_at'
+        ]
+
+class MediaSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Media
+        fields = [
+            'id',
+            'name',
+            'file',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -326,42 +339,16 @@ class ExamSerializer(serializers.HyperlinkedModelSerializer):
         model = Exam
         fields = [
             'id',
-            'description',
-            'result',
-            'clinical_case',
-            'created_at',
-            'deleted_at',
-            'updated_at'
-        ]
-
-class ExamPhysicsSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = ExamPhysics
-        fields = [
-            'id',
-            'description',
-            'result',
-            'clinical_case',
+            'name',
             'anatomy',
-            'type_result',
-            'created_at',
-            'deleted_at',
-            'updated_at'
-        ]
-
-class MediaSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = Media
-        fields = [
-            'id',
+            'result',
             'file',
-            'exam',
+            'clinical_case',
             'created_at',
             'deleted_at',
             'updated_at'
         ]
+
 
 class TypeParameterSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -429,7 +416,6 @@ class AddictionSerializer(serializers.HyperlinkedModelSerializer):
             'name',
             'frequency',
             'duration',
-            'start',
             'life_style',
             'created_at',
             'deleted_at',
@@ -457,31 +443,19 @@ class SymptomSerializer(serializers.HyperlinkedModelSerializer):
         model = Symptom
         fields = [
             'id',
+            'name',
             'localisation',
             'frequency',
             'duration',
-            'start_time',
             'evolution',
             'triggering_activity',
+            'degree',
             'clinical_case',
             'created_at',
             'deleted_at',
             'updated_at'
         ]
 
-class DescriptionSymptomSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = DescriptionSymptom
-        fields = [
-            'id',
-            'degree',
-            'physiological_function',
-            'symptom',
-            'created_at',
-            'deleted_at',
-            'updated_at'
-        ]
 
 class ConceptSerializer(serializers.HyperlinkedModelSerializer):
 
