@@ -318,10 +318,10 @@ class MediaSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class DiagnosisPhysicsSerializer(serializers.HyperlinkedModelSerializer):
+class PhysicalDiagnosisSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = DiagnosisPhysics
+        model = PhysicalDiagnosis
         fields = [
             'id',
             'physical_diagnosis',

@@ -131,9 +131,9 @@ class VirtualPatient(models.Model):
     )
 
     CIVIL_STATUS = (
-        ('CELIBATORY', 'CELIBATORY'),
-        ('MARY', 'MARY'),
-        ('DIVORCE', 'DIVORCE')
+        ('SINGLE', 'SINGLE'),
+        ('MARRIED', 'MARRIED'),
+        ('DIVORCED', 'DIVORCED')
     )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -243,9 +243,9 @@ class PersonalInfo(models.Model):
     )
 
     CIVIL_STATUS = (
-        ('CELIBATORY', 'CELIBATORY'),
-        ('MARY', 'MARY'),
-        ('DIVORCE', 'DIVORCE')
+        ('SINGLE', 'SINGLE'),
+        ('MARRIED', 'MARRIED'),
+        ('DIVORCED', 'DIVORCED')
     )
 
     BLOOD_GROUP = (
@@ -290,7 +290,7 @@ class Media(models.Model):
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
-class DiagnosisPhysics(models.Model):
+class PhysicalDiagnosis(models.Model):
 
     DIAGNOSIS_PHYSICS = (
         ('PALPATION', 'PALPATION'),

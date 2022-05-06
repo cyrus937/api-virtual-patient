@@ -327,7 +327,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='DiagnosisPhysics',
+            name='PhysicalDiagnosis',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('physical_diagnosis', models.CharField(choices=[('PALPATION', 'PALPATION'), ('OSCULTATION', 'OSCULTATION'), ('PERCUTION', 'PERCUTION'), ('INSPECTION', 'INSPECTION')], max_length=50)),

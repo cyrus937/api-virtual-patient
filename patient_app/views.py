@@ -171,9 +171,9 @@ class MediaViewSet(viewsets.ModelViewSet):
   queryset = Media.objects.all()
   serializer_class = MediaSerializer
 
-class DiagnosisPhysicsViewSet(viewsets.ModelViewSet):
-  queryset = DiagnosisPhysics.objects.all()
-  serializer_class = DiagnosisPhysicsSerializer
+class PhysicalDiagnosisViewSet(viewsets.ModelViewSet):
+  queryset = PhysicalDiagnosis.objects.all()
+  serializer_class = PhysicalDiagnosisSerializer
 
 class ExamViewSet(viewsets.ModelViewSet):
   queryset = Exam.objects.all()
