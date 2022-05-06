@@ -74,7 +74,7 @@ class Doctor(models.Model):
     city = models.CharField(max_length=50, null=True)
     cni = models.CharField(max_length=50, null=True, unique=True)
     sex = models.CharField(choices=SEX, max_length=50)
-    specialty = models.CharField(choices=SPECIALTY, max_length=50)
+    speciality = models.CharField(choices=SPECIALTY, max_length=50)
     year_of_birth = models.DateField(null=False)
     place_of_birth = models.CharField(max_length=150, null=False)
     nationality = models.CharField(max_length=20, null=False)
@@ -174,7 +174,7 @@ class ClinicalCase(models.Model):
     difficulty = models.CharField(choices=DIFFICULTE, max_length=50)
     final_diagnosis = models.CharField(null=False, max_length=100)
     system = models.CharField(choices=SYSTEM, max_length=50)
-    specialty = models.CharField(choices=SPECIALTY, max_length=50)
+    speciality = models.CharField(choices=SPECIALTY, max_length=50)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
@@ -255,7 +255,8 @@ class PersonalInfo(models.Model):
         ('B-', 'B-'),
         ('AB+', 'AB+'),
         ('AB-', 'AB-'),
-        ('O+', 'O-')
+        ('O-', 'O-'),
+        ('O+', 'O+')
     )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -274,7 +275,7 @@ class TreatmentInProgress(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50, null=False)
     administration_mode = models.CharField(max_length=100)
-    start_time = models.DateField(null=False)
+    duration = models.CharField(max_length=150,null=False)
     observation = models.TextField(blank=True)
     efficiency = models.CharField(max_length=50, null=True)
     clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.CASCADE, null=False)
@@ -345,8 +346,17 @@ class MedicalParameter(models.Model):
         return self.type_parameter.name + " = " + self.value + " " + self.type_parameter.unit
 
 class LifeStyle(models.Model):
+
+    WATER_QUALITY = (
+        ('Mineral water', 'Mineral water'),
+        ('Tap water', 'Tap water'),
+        ('Water from the source', 'Water from the source'),
+        ('River water', 'River water'),
+        ('Potable water', 'Potable water'),
+        ('Well water', 'Well water')
+    )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    water_quality = models.CharField(max_length=50, null=True)
+    water_quality = models.CharField(max_length=50, choices=WATER_QUALITY, null=True)
     mosquito = models.BooleanField(null=False)
     pet_company = models.CharField(max_length=50, null=True)
     clinical_case = models.ForeignKey(ClinicalCase, on_delete=models.CASCADE, null=False)
