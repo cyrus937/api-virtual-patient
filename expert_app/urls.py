@@ -9,7 +9,7 @@ routers = routers.DefaultRouter()
 urlpatterns = [
     path('', include(routers.urls)),
 
-    path('inference/',views.inference_maladie_symptoms, name='inference_maladie_symptoms'),
+    path('inference/',views.inference_disease_symptoms, name='inference_disease_symptoms'),
     re_path(r'^[a-zA-Z0-9/,;:!\\*-+^$ù&é(-è_çà)]+/$', views.errorPage),
     
 ]
