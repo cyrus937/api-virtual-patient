@@ -19,7 +19,7 @@ import pyAgrum as gum
 
 # Create your views here.
 
-path = os.getcwd()
+path = os.path.realpath(__file__)
 print("Le répertoire courant est : " + path)
 print("")
 print("Importing the Bayesian network")
