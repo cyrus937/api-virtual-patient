@@ -20,7 +20,7 @@ import pyAgrum as gum
 
 print("")
 print("Importing the Bayesian network")
-bn=gum.loadBN("app\virtual_patient_api\media\Bayesian_network.bif")
+bn=gum.loadBN("app\expert_app\media\Bayesian_network.bif")
 print("")
 print("Successful import")
 print("")
