@@ -6,6 +6,7 @@ colorama==0.4.4
 cycler==0.11.0
 decorator==5.1.1
 dj-database-url==0.5.0
+dj-static==0.0.6
 Django==4.0.4
 django-cors-headers==3.11.0
 djangorestframework==3.12.2
@@ -25,6 +26,7 @@ parso==0.8.3
 pickleshare==0.7.5
 Pillow==8.0.1
 prompt-toolkit==3.0.29
+psycopg2==2.9.3
 pure-eval==0.2.2
 pyagrum==1.0.0
 pydot==1.4.2
@@ -36,6 +38,7 @@ pytz==2022.1
 six==1.16.0
 sqlparse==0.4.2
 stack-data==0.2.0
+static3==0.7.0
 traitlets==5.1.1
 tzdata==2022.1
 wcwidth==0.2.5
