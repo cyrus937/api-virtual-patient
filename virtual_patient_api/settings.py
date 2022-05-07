@@ -32,7 +32,9 @@ if os.environ.get('ENV') == 'PRODUCTION':
 else:
     DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'virtual-patient-api.herokuapp.com']
 
 if os.environ.get('ENV') == 'PODUCTION':
     PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
