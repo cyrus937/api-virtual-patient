@@ -1,1 +1,1 @@
-web: gunicorn virtual-patient-api.wsgi
+web: gunicorn virtual_patient_api.wsgi
