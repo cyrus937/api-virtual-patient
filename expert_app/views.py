@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 
 import json
 import time
+import os
 
 from .models import *
 from .serializers import *
@@ -20,7 +21,10 @@ import pyAgrum as gum
 
 print("")
 print("Importing the Bayesian network")
-bn=gum.loadBN("virtual_patient_api\media\Bayesian_network.bif")
+if os.environ.get('ENV') == 'PRODUCTION':
+    bn=gum.loadBN("app\virtual_patient_api\media\Bayesian_network.bif")
+else:
+    bn=gum.loadBN("virtual_patient_api\media\Bayesian_network.bif")
 print("")
 print("Successful import")
 print("")
