@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 
 import json
 import time
+import os
 
 from .models import *
 from .serializers import *
@@ -17,7 +18,8 @@ import numpy as np
 import pyAgrum as gum
 
 # Create your views here.
-
+path = os.path.realpath(__file__)
+print("Le chemin du script est : " + path)
 print("")
 print("Importing the Bayesian network")
 bn=gum.loadBN("app\expert_app\media\Bayesian_network.bif")
