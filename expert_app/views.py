@@ -19,6 +19,8 @@ import pyAgrum as gum
 
 # Create your views here.
 
+path = os.getcwd()
+print("Le répertoire courant est : " + path)
 print("")
 print("Importing the Bayesian network")
 if os.environ.get('ENV') == 'PRODUCTION':
