@@ -34,6 +34,7 @@ else:
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
+    '129.0.205.5',
     'virtual-patient-api.herokuapp.com']
 
 if os.environ.get('ENV') == 'PODUCTION':
