@@ -277,6 +277,7 @@ class PersonalInfoSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'id',
             'sex',
+            'age',
             'civil_status',
             'profession',
             'nb_child',
