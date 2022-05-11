@@ -28,7 +28,7 @@ routers.register(r'life-style', views.LifeStyleViewSet)
 routers.register(r'physical-activity', views.PhysicalActivityViewSet)
 routers.register(r'addiction', views.AddictionViewSet)
 routers.register(r'travel', views.TravelViewSet)
-routers.register(r'concept', views.ConceptViewSet)
+"""routers.register(r'concept', views.ConceptViewSet)"""
 routers.register(r'medical-antecedent', views.MedicalAntecedentViewSet)
 routers.register(r'obstetrical-antecedent', views.ObstetricalAntecedentViewSet)
 routers.register(r'surgery', views.SurgeryViewSet)

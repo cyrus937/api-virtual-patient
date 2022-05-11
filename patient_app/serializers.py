@@ -187,6 +187,7 @@ class ClinicalCaseSerializer(serializers.HyperlinkedModelSerializer):
             'final_diagnosis',
             'system',
             'specialty',
+            'concept',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -459,7 +460,7 @@ class SymptomSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
-class ConceptSerializer(serializers.HyperlinkedModelSerializer):
+"""class ConceptSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Concept
@@ -470,7 +471,7 @@ class ConceptSerializer(serializers.HyperlinkedModelSerializer):
             'created_at',
             'deleted_at',
             'updated_at'
-        ]
+        ]"""
 
 class MedicalAntecedentSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -527,20 +528,6 @@ class AllergySerializer(serializers.HyperlinkedModelSerializer):
             'updated_at'
         ]
 
-class TreatmentSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = Treatment
-        fields = [
-            'id','url',
-            'name',
-            'duration',
-            'posology',
-            'created_at',
-            'deleted_at',
-            'updated_at'
-        ]
-
 class DiseaseSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
@@ -552,7 +539,22 @@ class DiseaseSerializer(serializers.HyperlinkedModelSerializer):
             'end_time',
             'observation',
             'medical_antecedent',
-            'treatment',
+            'created_at',
+            'deleted_at',
+            'updated_at'
+        ]
+
+
+class TreatmentSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Treatment
+        fields = [
+            'id','url',
+            'name',
+            'duration',
+            'posology',
+            'disease',
             'created_at',
             'deleted_at',
             'updated_at'
