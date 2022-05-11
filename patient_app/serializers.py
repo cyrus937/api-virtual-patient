@@ -7,7 +7,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Doctor
         fields = [
-            'id',
+            'id','url',
             'name',
             'first_name',
             'phone_number',
@@ -75,7 +75,7 @@ class DoctorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Doctor
         fields = [
-            'id',
+            'id','url',
             'name',
             'first_name',
             'phone_number',
@@ -99,7 +99,7 @@ class LeanerPhysicianSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = LeanerPhysician
         fields = [
-            'id',
+            'id','url',
             'name',
             'first_name',
             'phone_number',
@@ -125,7 +125,7 @@ class ExpertPhysicianSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ExpertPhysician
         fields = [
-            'id',
+            'id','url',
             'name',
             'first_name',
             'phone_number',
@@ -153,7 +153,7 @@ class LogSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Log
         fields = [
-            'id',
+            'id','url',
             'operation',
             'doctor',
             'created_at',
@@ -165,7 +165,7 @@ class VirtualPatientSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = VirtualPatient
         fields = [
-            'id',
+            'id','url',
             'sex',
             'civil_status',
             'min_age',
@@ -181,7 +181,7 @@ class ClinicalCaseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ClinicalCase
         fields = [
-            'id',
+            'id','url',
             'initial_problem',
             'difficulty',
             'final_diagnosis',
@@ -198,7 +198,7 @@ class VirtualCaseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = VirtualCase
         fields = [
-            'id',
+            'id','url',
             'virtual_patient',
             'clinical_case',
             'created_at',
@@ -212,7 +212,7 @@ class FeedbackSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Feedback
         fields = [
-            'id',
+            'id','url',
             'comment',
             'expert_physician',
             'created_at',
@@ -226,7 +226,7 @@ class EvaluationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Evaluation
         fields = [
-            'id',
+            'id','url',
             'type',
             'mark',
             'note',
@@ -244,7 +244,7 @@ class HypothesisSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Hypothesis
         fields = [
-            'id',
+            'id','url',
             'description',
             'learner_physician',
             'evaluation',
@@ -259,7 +259,7 @@ class QuestionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Question
         fields = [
-            'id',
+            'id','url',
             'question',
             'answer',
             'learner_physician',
@@ -275,7 +275,7 @@ class PersonalInfoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = PersonalInfo
         fields = [
-            'id',
+            'id','url',
             'sex',
             'age',
             'civil_status',
@@ -294,7 +294,7 @@ class TreatmentInProgressSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TreatmentInProgress
         fields = [
-            'id',
+            'id','url',
             'name',
             'administration_mode',
             'duration',
@@ -311,7 +311,7 @@ class MediaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Media
         fields = [
-            'id',
+            'id','url',
             'name',
             'file',
             'created_at',
@@ -324,7 +324,7 @@ class PhysicalDiagnosisSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = PhysicalDiagnosis
         fields = [
-            'id',
+            'id','url',
             'physical_diagnosis',
             'result',
             'file',
@@ -339,7 +339,7 @@ class ExamSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Exam
         fields = [
-            'id',
+            'id','url',
             'name',
             'anatomy',
             'result',
@@ -357,6 +357,7 @@ class TypeParameterSerializer(serializers.HyperlinkedModelSerializer):
         model = TypeParameter
         fields = [
             'id',
+            'url',
             'name',
             'unit',
             'created_at',
@@ -369,7 +370,7 @@ class MedicalParameterSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = MedicalParameter
         fields = [
-            'id',
+            'id','url',
             'value',
             'commantaire',
             'type_parameter',
@@ -384,7 +385,7 @@ class LifeStyleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = LifeStyle
         fields = [
-            'id',
+            'id','url',
             'water_quality',
             'mosquito',
             'pet_company',
@@ -399,7 +400,7 @@ class PhysicalActivitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = PhysicalActivity
         fields = [
-            'id',
+            'id','url',
             'name',
             'frequency',
             'life_style',
@@ -413,7 +414,7 @@ class AddictionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Addiction
         fields = [
-            'id',
+            'id','url',
             'name',
             'frequency',
             'duration',
@@ -428,7 +429,7 @@ class TravelSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Travel
         fields = [
-            'id',
+            'id','url',
             'location',
             'frequency',
             'duration',
@@ -443,7 +444,7 @@ class SymptomSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Symptom
         fields = [
-            'id',
+            'id','url',
             'name',
             'localisation',
             'frequency',
@@ -463,7 +464,7 @@ class ConceptSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Concept
         fields = [
-            'id',
+            'id','url',
             'name',
             'clinical_case',
             'created_at',
@@ -476,7 +477,7 @@ class MedicalAntecedentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = MedicalAntecedent
         fields = [
-            'id',
+            'id','url',
             'family_antecedents',
             'clinical_case',
             'created_at',
@@ -489,7 +490,7 @@ class ObstetricalAntecedentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ObstetricalAntecedent
         fields = [
-            'id',
+            'id','url',
             'nb_pregnancy',
             'date_of_last_pregnancy',
             'medical_antecedent',
@@ -503,7 +504,7 @@ class SurgerySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Surgery
         fields = [
-            'id',
+            'id','url',
             'name',
             'date',
             'medical_antecedent',
@@ -517,7 +518,7 @@ class AllergySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Allergy
         fields = [
-            'id',
+            'id','url',
             'manifestation',
             'trigger',
             'medical_antecedent',
@@ -531,7 +532,7 @@ class TreatmentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Treatment
         fields = [
-            'id',
+            'id','url',
             'name',
             'duration',
             'posology',
@@ -545,7 +546,7 @@ class DiseaseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Disease
         fields = [
-            'id',
+            'id','url',
             'name',
             'start_time',
             'end_time',
