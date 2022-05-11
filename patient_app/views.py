@@ -237,6 +237,19 @@ class DiseaseViewSet(viewsets.ModelViewSet):
   serializer_class = DiseaseSerializer
 
 @api_view(['GET'])
+def getClinicalCase(request):
+  clinical_cases = ClinicalCase.objects.all()
+  for cl in clinical_cases:
+    try:
+      personal_info = PersonalInfo.objects.filter(clinical_case = cl['url'])
+      cl['personal_info'] = personal_info
+    except:
+      print("No Personal Information")
+      cl['personal_info'] = ''
+  
+  return Response(clinical_cases, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
 def errorPage(request):
     """
       This view is returned when no url matches the one called

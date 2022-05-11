@@ -372,7 +372,7 @@ class MedicalParameterSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'id','url',
             'value',
-            'commantaire',
+            'comment',
             'type_parameter',
             'clinical_case',
             'created_at',
