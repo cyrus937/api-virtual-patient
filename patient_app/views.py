@@ -6,6 +6,8 @@ from django.http.response import JsonResponse
 from django.forms.models import model_to_dict
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.serializers import serialize
+from rest_framework.filters import OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -180,6 +182,10 @@ class TreatmentInProgressViewSet(viewsets.ModelViewSet):
 class MediaViewSet(viewsets.ModelViewSet):
   queryset = Media.objects.all()
   serializer_class = MediaSerializer
+  filter_backends = [OrderingFilter]
+  search_fields = ['type']
+  filter_backends = [DjangoFilterBackend]
+  filterset_fields = ['type']
 
 class PhysicalDiagnosisViewSet(viewsets.ModelViewSet):
   queryset = PhysicalDiagnosis.objects.all()
