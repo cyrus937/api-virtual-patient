@@ -155,6 +155,7 @@ class LogSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'id','url',
             'operation',
+            'table',
             'doctor',
             'created_at',
             'deleted_at',

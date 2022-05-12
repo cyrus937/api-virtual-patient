@@ -47,4 +47,4 @@ urlpatterns = [
     path('', viewsExpert.root),
     path('api/virtual-patient/', include('patient_app.urls')),
     path('api/expert-module/', include('expert_app.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

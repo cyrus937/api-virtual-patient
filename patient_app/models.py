@@ -118,6 +118,7 @@ class Log(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     operation = models.CharField(max_length=20, choices=OPERATION)
+    table = models.CharField(max_length=50)
     doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
