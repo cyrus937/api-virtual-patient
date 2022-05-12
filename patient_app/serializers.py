@@ -187,7 +187,6 @@ class ClinicalCaseSerializer(serializers.HyperlinkedModelSerializer):
             'final_diagnosis',
             'system',
             'specialty',
-            'concept',
             'created_at',
             'deleted_at',
             'updated_at'
@@ -314,6 +313,7 @@ class MediaSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'id','url',
             'name',
+            'type',
             'file',
             'created_at',
             'deleted_at',

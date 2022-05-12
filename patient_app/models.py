@@ -182,7 +182,6 @@ class ClinicalCase(models.Model):
     final_diagnosis = models.CharField(null=False, max_length=100)
     system = models.CharField(choices=SYSTEM, max_length=50)
     specialty = models.CharField(choices=SPECIALTY, max_length=50)
-    concept = models.CharField(max_length=150, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)
@@ -292,8 +291,11 @@ class TreatmentInProgress(models.Model):
     updated_at = models.DateTimeField(null=False, auto_now=True)
 
 class Media(models.Model):
+    TYPES = (('EXAM', 'EXAM'),
+    ('PHYSICAL DIAGNOSIS', 'PHYSICAL DIAGNOSIS'))
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=150, null=False)
+    type = models.CharField(choices=TYPES, max_length=50, null=False)
     file = models.FileField(null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
