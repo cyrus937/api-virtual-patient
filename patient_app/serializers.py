@@ -345,6 +345,7 @@ class ExamSerializer(serializers.HyperlinkedModelSerializer):
             'name',
             'anatomy',
             'result',
+            'verdict',
             'file',
             'clinical_case',
             'created_at',
