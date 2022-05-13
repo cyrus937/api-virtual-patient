@@ -331,13 +331,13 @@ def getClinicalCase(request):
     for life_style in life_styles:
       life_style = Convert(life_style, {})
 
-      physical_activities = PhysicalActivitySerializer(PhysicalActivity.objects.all().filter(life_style=life_style["id"]), many=True, context=context)
+      physical_activities = PhysicalActivitySerializer(PhysicalActivity.objects.all().filter(life_style=life_style["id"]), many=True, context=context).data
       life_style["physical_activity"] = [Convert(t, {}) for t in physical_activities]
 
-      addictions = AddictionSerializer(Addiction.objects.all().filter(life_style=life_style["id"]), many=True, context=context)
+      addictions = AddictionSerializer(Addiction.objects.all().filter(life_style=life_style["id"]), many=True, context=context).data
       life_style["addiction"] = [Convert(t, {}) for t in addictions]
 
-      travels = TravelSerializer(Travel.objects.all().filter(life_style=life_style["id"]), many=True, context=context)
+      travels = TravelSerializer(Travel.objects.all().filter(life_style=life_style["id"]), many=True, context=context).data
       life_style["travel"] = [Convert(t, {}) for t in travels]
       list_life_style.append(life_style)
     cl["life_style"] = list_life_style
@@ -364,7 +364,7 @@ def getClinicalCase(request):
       for disease in diseases:
         disease = Convert(disease, {})
 
-        treatements = TreatmentSerializer(Treatment.objects.all().filter(disease=disease["id"]), many=True, context=context)
+        treatements = TreatmentSerializer(Treatment.objects.all().filter(disease=disease["id"]), many=True, context=context).data
         disease["treatement"] = [Convert(t, {}) for t in treatements]
 
         list_disease.append(disease)
