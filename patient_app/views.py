@@ -360,7 +360,7 @@ def getClinicalCase(request):
       allergies = AllergySerializer(Allergy.objects.all().filter(medical_antecedent=medical_antecedent["id"]), many=True, context=context).data
       medical_antecedent["allergy"] = [Convert(t, {}) for t in allergies]
 
-      diseases = DiseaseSerializer(Disease.objects.all().filter(medical_antecedent=medical_antecedent["id"]))
+      diseases = DiseaseSerializer(Disease.objects.all().filter(medical_antecedent=medical_antecedent["id"]), many=True, context=context).data
       for disease in diseases:
         disease = Convert(disease, {})
 
