@@ -39,7 +39,7 @@ routers.register(r'disease', views.DiseaseViewSet)
 urlpatterns = [
     path('', include(routers.urls)),
 
-    path('getclinicalcase/',views.getClinicalCase, name='getClinicalCase'),
+    path('getclinicalcase/<str:id_clinical_case>/',views.getClinicalCase, name='getClinicalCase'),
     re_path(r'^[a-zA-Z0-9/,;:!\\*-+^$ù&é(-è_çà)]+/$', views.errorPage),
     
 ]

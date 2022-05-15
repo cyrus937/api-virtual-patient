@@ -258,7 +258,7 @@ def Convert(tup, di):
   return di
 
 @api_view(['GET'])
-def getClinicalCase(request):
+def getClinicalCase(request, id_clinical_case):
   l = []
   list_medical_parameter = []
   list_physical_dignosis = []
@@ -270,7 +270,7 @@ def getClinicalCase(request):
   context = {
         'request': request,
     }
-  clinical_cases = ClinicalCaseSerializer(ClinicalCase.objects.all(), many=True, context=context).data
+  clinical_cases = ClinicalCaseSerializer(ClinicalCase.objects.all().filter(id = id_clinical_case), many=True, context=context).data
   
   for cl in clinical_cases:
     cl = Convert(cl, {})
@@ -294,6 +294,7 @@ def getClinicalCase(request):
           break
       list_medical_parameter.append(medPar)
     cl["medical_parameter"] = list_medical_parameter
+    list_medical_parameter = []
 
     # Physical Diagnosis
     physical_diagnosis = PhysicalDiagnosisSerializer(PhysicalDiagnosis.objects.all().filter(clinical_case = cl["id"]), many=True, context=context).data
@@ -307,6 +308,7 @@ def getClinicalCase(request):
           break
       list_physical_dignosis.append(phydiag)
     cl["physical_diagnosis"] = list_physical_dignosis
+    list_physical_dignosis = []
 
     # Exam
     exams = ExamSerializer(Exam.objects.all().filter(clinical_case = cl["id"]), many=True, context=context).data
@@ -320,6 +322,7 @@ def getClinicalCase(request):
           break
       list_exam.append(ex)
     cl["exam"] = list_exam
+    list_exam = []
 
     # Treatment in progress
     treatment_in_progress = TreatmentInProgressSerializer(TreatmentInProgress.objects.all().filter(clinical_case = cl["id"]), many=True, context=context).data
@@ -341,6 +344,7 @@ def getClinicalCase(request):
       life_style["travel"] = [Convert(t, {}) for t in travels]
       list_life_style.append(life_style)
     cl["life_style"] = list_life_style
+    list_life_style = []
 
     # Symptom
     symptoms = SymptomSerializer(Symptom.objects.all().filter(clinical_case = cl["id"]), many=True, context=context).data
@@ -373,6 +377,7 @@ def getClinicalCase(request):
 
       list_medical_antecedent.append(medical_antecedent)
     cl["medical_antecedent"] = list_medical_antecedent
+    list_medical_antecedent = []
 
     l.append(cl)  
   
