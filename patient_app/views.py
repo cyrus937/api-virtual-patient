@@ -258,6 +258,23 @@ def Convert(tup, di):
   return di
 
 @api_view(['GET'])
+def getStat(request):
+
+  learner_physician = LeanerPhysician.objects.all().count()
+  clinical_case = ClinicalCase.objects.all().count()
+  expert = ExpertPhysician.objects.all().count()
+  evaluation = Evaluation.objects.all().count()
+
+  result = {
+      "learner_physician": learner_physician,
+      "clinical_case": clinical_case,
+      "expert": expert,
+      "evaluation": evaluation
+    }
+  
+  return Response(result, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
 def getClinicalCase(request, id_clinical_case):
   l = []
   list_medical_parameter = []

@@ -40,6 +40,7 @@ urlpatterns = [
     path('', include(routers.urls)),
 
     path('getclinicalcase/<str:id_clinical_case>/',views.getClinicalCase, name='getClinicalCase'),
+    path('getStat/',views.getStat, name='getStat'),
     re_path(r'^[a-zA-Z0-9/,;:!\\*-+^$ù&é(-è_çà)]+/$', views.errorPage),
     
 ]
