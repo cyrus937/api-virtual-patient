@@ -287,7 +287,11 @@ def getClinicalCase(request, id_clinical_case):
   context = {
         'request': request,
     }
-  clinical_cases = ClinicalCaseSerializer(ClinicalCase.objects.all().filter(id = id_clinical_case), many=True, context=context).data
+  
+  if id_clinical_case != 'all':
+    clinical_cases = ClinicalCaseSerializer(ClinicalCase.objects.all().filter(id = id_clinical_case), many=True, context=context).data
+  else:
+    clinical_cases = ClinicalCaseSerializer(ClinicalCase.objects.all(), many=True, context=context).data
   
   for cl in clinical_cases:
     cl = Convert(cl, {})
