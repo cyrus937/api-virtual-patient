@@ -181,7 +181,7 @@ class ClinicalCase(models.Model):
     initial_problem =  models.TextField(null=False)
     difficulty = models.CharField(choices=DIFFICULTE, max_length=50)
     final_diagnosis = models.CharField(null=False, max_length=100)
-    system = models.CharField(choices=SYSTEM, max_length=50)
+    system = models.CharField(max_length=150, null=False)
     specialty = models.CharField(choices=SPECIALTY, max_length=50)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
