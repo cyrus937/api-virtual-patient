@@ -66,12 +66,12 @@ def inference_disease_symptoms(request):
       dic = Convert(sorted(res.items(), key=lambda x: x[1], reverse=True), {})
       res = dict(list(dic.items())[0: 5])
       
-      return Response(res, status=status.HTTP_201_CREATED)
+      return Response(res, status=status.HTTP_200_OK)
     else:
       disease = body['disease']
       res[disease] = infere_network(disease, symptoms)[1]
       
-      return Response(res, status=status.HTTP_201_CREATED)
+      return Response(res, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def errorPage(request):

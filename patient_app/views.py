@@ -272,7 +272,7 @@ def getStat(request):
       "evaluation": evaluation
     }
   
-  return Response(result, status=status.HTTP_201_CREATED)
+  return Response(result, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def getClinicalCase(request, id_clinical_case):
@@ -402,7 +402,7 @@ def getClinicalCase(request, id_clinical_case):
 
     l.append(cl)  
   
-  return Response(l, status=status.HTTP_201_CREATED)
+  return Response(l, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def errorPage(request):

@@ -24,6 +24,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from patient_app import views as viewsPatient
 from expert_app import views as viewsExpert
+from learner_app import views as viewsLearner
 
 @api_view(['GET'])
 def root(request):
@@ -35,7 +36,8 @@ def root(request):
         "USER LOGIN API": request.build_absolute_uri() + 'auth/login/',
         "USER REFRESH-TOKEN API": request.build_absolute_uri() + 'auth/refresh-token/',
         "VIRTUAL PATIENT API": request.build_absolute_uri() + 'virtual-patient/',
-        "EXPERT MODULE": request.build_absolute_uri() + 'expert-module/'
+        "EXPERT MODULE": request.build_absolute_uri() + 'expert-module/',
+        "LEARNER MODULE": request.build_absolute_uri() + 'learner-module/'
     })
 
 urlpatterns = [
@@ -45,6 +47,8 @@ urlpatterns = [
     path('api/auth/refresh-token/', TokenRefreshView.as_view, name='refreshtoken'),
     path('', viewsPatient.root),
     path('', viewsExpert.root),
+    path('', viewsLearner.root),
     path('api/virtual-patient/', include('patient_app.urls')),
     path('api/expert-module/', include('expert_app.urls')),
+    path('api/learner-module/', include('learner_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
