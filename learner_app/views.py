@@ -110,7 +110,7 @@ def rating(request):
   if body == None:
     result = {
       "status": "FAILURE",
-      "message": "learner, system, disease, symptoms required"
+      "message": "learner, system, disease, symptoms, loss required"
     }
     return Response(result, status.HTTP_204_NO_CONTENT)
   else:
@@ -136,6 +136,12 @@ def rating(request):
       result = {
         "status": "FAILURE",
         "message": "symptoms required"
+      }
+      return Response(result, status.HTTP_204_NO_CONTENT)
+    if 'loss' not in body:
+      result = {
+        "status": "FAILURE",
+        "message": "loss required"
       }
       return Response(result, status.HTTP_204_NO_CONTENT)
   
@@ -172,6 +178,21 @@ def rating(request):
           system = sys
         )
         rating_disease.save()
+    
+    for symptom in body["loss"]:
+      try:
+        weight_symptom = WeightSymptomDiseaseSerializer(WeightSymptomDisease.objects.get(disease=disease, symptom=symptom), many=False, context=context).data
+      except WeightSymptomDisease.DoesNotExist:
+        continue
+      
+      weight_symptom = Decimal(weight_symptom["weight"])
+      try:
+        rating_disease = RatingDisease.objects.get(disease=disease, system=body["system"], learner=body["learner"])
+        rating_disease.rating -= weight_symptom
+        rating_disease.rating = rating_disease.rating if rating_disease.rating>=0 else 0
+        rating_disease.save()
+      except RatingDisease.DoesNotExist:
+        continue
       
     try:
       rating_system = RatingSystem.objects.get(system=body["system"], learner=body["learner"])
