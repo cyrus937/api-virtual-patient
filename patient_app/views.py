@@ -274,6 +274,135 @@ def getStat(request):
   
   return Response(result, status=status.HTTP_200_OK)
 
+def clinicalCase(request, id_clinical_case):
+  l = []
+  list_medical_parameter = []
+  list_physical_dignosis = []
+  list_exam = []
+  list_life_style = []
+  list_medical_antecedent = []
+  list_disease = []
+
+  context = {
+        'request': request,
+    }
+  
+  if id_clinical_case != 'all':
+    clinical_cases = ClinicalCaseSerializer(ClinicalCase.objects.all().filter(id = id_clinical_case), many=True, context=context).data
+  else:
+    clinical_cases = ClinicalCaseSerializer(ClinicalCase.objects.all(), many=True, context=context).data
+  
+  for cl in clinical_cases:
+    cl = Convert(cl, {})
+
+    # Personal Information
+    personal_info = PersonalInfo.objects.all().filter(clinical_case = cl["id"])
+    p = PersonalInfoSerializer(personal_info, many=True, context=context).data
+    cl["personal_info"] = [ Convert(t, {}) for t in p][0]
+
+    # Medical Parameter
+    medical_parameter = MedicalParameter.objects.all().filter(clinical_case = cl["id"])
+    medical_parameters = MedicalParameterSerializer(medical_parameter, many=True, context=context).data
+    type_parameter = TypeParameterSerializer(TypeParameter.objects.all(), many=True, context=context).data
+
+    for medPar in medical_parameters:
+      medPar = Convert(medPar, {})
+      for type in type_parameter:
+        type = Convert(type, {})
+        if type["url"] == medPar["type_parameter"]:
+          medPar["type_parameter"] = type
+          break
+      list_medical_parameter.append(medPar)
+    cl["medical_parameter"] = list_medical_parameter
+    list_medical_parameter = []
+
+    # Physical Diagnosis
+    physical_diagnosis = PhysicalDiagnosisSerializer(PhysicalDiagnosis.objects.all().filter(clinical_case = cl["id"]), many=True, context=context).data
+    medias = MediaSerializer(Media.objects.all(), many=True, context=context).data
+    for phydiag in physical_diagnosis:
+      phydiag = Convert(phydiag, {})
+      for med in medias:
+        med = Convert(med, {})
+        if med["url"] == phydiag["file"]:
+          phydiag["file"] = med
+          break
+      list_physical_dignosis.append(phydiag)
+    cl["physical_diagnosis"] = list_physical_dignosis
+    list_physical_dignosis = []
+
+    # Exam
+    exams = ExamSerializer(Exam.objects.all().filter(clinical_case = cl["id"]), many=True, context=context).data
+    medias = MediaSerializer(Media.objects.all(), many=True, context=context).data
+    for ex in exams:
+      ex = Convert(ex, {})
+      for med in medias:
+        med = Convert(med, {})
+        if med["url"] == ex["file"]:
+          ex["file"] = med
+          break
+      list_exam.append(ex)
+    cl["exam"] = list_exam
+    list_exam = []
+
+    # Treatment in progress
+    treatment_in_progress = TreatmentInProgressSerializer(TreatmentInProgress.objects.all().filter(clinical_case = cl["id"]), many=True, context=context).data
+    cl["treatment_in_progress"] = [ Convert(t, {}) for t in treatment_in_progress]
+
+    # Life style
+    lifSty = None
+    life_styles = LifeStyleSerializer(LifeStyle.objects.all().filter(clinical_case = cl["id"]), many=True, context=context).data
+    for life_style in life_styles:
+      life_style = Convert(life_style, {})
+
+      physical_activities = PhysicalActivitySerializer(PhysicalActivity.objects.all().filter(life_style=life_style["id"]), many=True, context=context).data
+      life_style["physical_activity"] = [Convert(t, {}) for t in physical_activities]
+
+      addictions = AddictionSerializer(Addiction.objects.all().filter(life_style=life_style["id"]), many=True, context=context).data
+      life_style["addiction"] = [Convert(t, {}) for t in addictions]
+
+      travels = TravelSerializer(Travel.objects.all().filter(life_style=life_style["id"]), many=True, context=context).data
+      life_style["travel"] = [Convert(t, {}) for t in travels]
+      list_life_style.append(life_style)
+    cl["life_style"] = list_life_style
+    list_life_style = []
+
+    # Symptom
+    symptoms = SymptomSerializer(Symptom.objects.all().filter(clinical_case = cl["id"]), many=True, context=context).data
+    cl["symptom"] = [ Convert(t, {}) for t in symptoms]
+
+    # Medical Antecedent
+    medical_antecedents = MedicalAntecedentSerializer(MedicalAntecedent.objects.all().filter(clinical_case = cl["id"]), many=True, context=context).data
+    for medical_antecedent in medical_antecedents:
+      medical_antecedent = Convert(medical_antecedent, {})
+
+      obstetrical_antecedents = ObstetricalAntecedentSerializer(ObstetricalAntecedent.objects.all().filter(medical_antecedent=medical_antecedent["id"]), many=True, context=context).data
+      medical_antecedent["obstetrical_antecedent"] = [Convert(t) for t in obstetrical_antecedents]
+
+      surgeries = SurgerySerializer(Surgery.objects.all().filter(medical_antecedent = medical_antecedent["id"]), many=True, context=context).data
+      medical_antecedent["surgery"] = [Convert(t, {}) for t in surgeries]
+
+      allergies = AllergySerializer(Allergy.objects.all().filter(medical_antecedent=medical_antecedent["id"]), many=True, context=context).data
+      medical_antecedent["allergy"] = [Convert(t, {}) for t in allergies]
+
+      diseases = DiseaseSerializer(Disease.objects.all().filter(medical_antecedent=medical_antecedent["id"]), many=True, context=context).data
+      for disease in diseases:
+        disease = Convert(disease, {})
+
+        treatements = TreatmentSerializer(Treatment.objects.all().filter(disease=disease["id"]), many=True, context=context).data
+        disease["treatement"] = [Convert(t, {}) for t in treatements]
+
+        list_disease.append(disease)
+      medical_antecedent["disease"] = list_disease
+      list_disease = []
+
+      list_medical_antecedent.append(medical_antecedent)
+    cl["medical_antecedent"] = list_medical_antecedent
+    list_medical_antecedent = []
+
+    l.append(cl)  
+  
+  return l
+
 @api_view(['GET'])
 def getClinicalCase(request, id_clinical_case):
   l = []
