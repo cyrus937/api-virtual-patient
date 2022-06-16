@@ -230,19 +230,19 @@ def lifestyle_phrase_grammar(entities_ner, life_obj):
 
   if 'MOSQUITO NET' in entities_ner:
     if life_obj['mosquito'] == True:
-      return 'Yes Doctor, I sleep under a mosquito net'
+      return 'Yes Doctor, I sleep under a mosquito net', True
     else:
-      return "No Doctor, I don't sleep under a mosquito net"
+      return "No Doctor, I don't sleep under a mosquito net", True
   
   elif 'PET' in entities_ner:
     if life_obj['pet_company'] == "":
-      return "No Doctor, I don't have any pet"
+      return "No Doctor, I don't have any pet", False
     else:
       pets = life_obj['pet_company'].replace(';', ', ')
-      return "I have a " + pets
+      return "I have a " + pets, True
   
   elif 'WATER' in entities_ner:
-    return 'I usually drink ' + life_obj['water_quality']
+    return 'I usually drink ' + life_obj['water_quality'], True
   
   elif 'ALCOHOL' in entities_ner:
     gram = """
@@ -259,7 +259,7 @@ def lifestyle_phrase_grammar(entities_ner, life_obj):
         alcohol = life
         break
     if alcohol == None:
-      return "No doctor, I don't consume any alcohol"
+      return "No doctor, I don't consume any alcohol", False
     
     if 'FREQUENCY' in entities_ner:
       gram = gram + "A2 -> B2 '" + alcohol['frequency'] + "' [1.0] | [0.0]\n"
@@ -275,7 +275,7 @@ def lifestyle_phrase_grammar(entities_ner, life_obj):
 
     S = grammar.start() # axiom of the grammar
     word = get_word(grammar=grammar, non_terminal=S) # parses grammar through left-most derivation to create the word
-    return word
+    return word, True
   
   
   elif 'DRUG' in entities_ner:
@@ -292,7 +292,7 @@ def lifestyle_phrase_grammar(entities_ner, life_obj):
         drugs.append(life)
 
     if len(drugs) == 0:
-      return "No doctor, I don't smoke anything."
+      return "No doctor, I don't smoke anything.", False
     
     drug = None
     drug_name = max_similar(['Cigarette', 'Tramol', 'Marijuana', 'Canabis', 'Medecine', 'Smoke'], entities_ner['DRUG'])
@@ -300,7 +300,7 @@ def lifestyle_phrase_grammar(entities_ner, life_obj):
       all_drugs = ""
       for dr in drugs:
         all_drugs = all_drugs + dr['name'] + ", "
-      return 'Yes doctor, I consume ' + all_drugs
+      return 'Yes doctor, I consume ' + all_drugs, True
     
     else:
       for dr in drugs:
@@ -309,7 +309,7 @@ def lifestyle_phrase_grammar(entities_ner, life_obj):
           break
 
     if drugs == None:
-      return "I don't smoke " + drug_name + " doctor"
+      return "I don't smoke " + drug_name + " doctor", False
     
     gram = gram + "A1 -> B1 '" + drug['name'] + "' [1.0] | [0.0]\n"
     if 'FREQUENCY' in entities_ner:
@@ -326,16 +326,16 @@ def lifestyle_phrase_grammar(entities_ner, life_obj):
 
     S = grammar.start() # axiom of the grammar
     word = get_word(grammar=grammar, non_terminal=S) # parses grammar through left-most derivation to create the word
-    return word
+    return word, True
   
   elif 'SPORT' in entities_ner:
     sports = life_obj['physical_activity']
     if len(sports) == 0:
-      return "I don't do any sport of physical activity, doctor"
+      return "I don't do any sport of physical activity, doctor", False
     all_sports = ""
     for sp in sports:
-      all_sports = all_sports + sp['name'] + "about " + sp['frequency'] + ", "
-    return "I play " + all_sports
+      all_sports = all_sports + sp['name'] + " about " + sp['frequency'] + ", "
+    return "I play " + all_sports, True
   
   elif 'TRAVEL' in entities_ner:
     gram = """
@@ -348,7 +348,7 @@ def lifestyle_phrase_grammar(entities_ner, life_obj):
     travels = life_obj['travel']
     
     if len(travels) == 0:
-      return "No doctor, I didn't travel recently"
+      return "No doctor, I didn't travel recently", False
     
     travel = travels[0]
     gram = gram + "A1 -> B1 '" + travel['location'] + "' [1.0] | [0.0]\n"
@@ -366,7 +366,7 @@ def lifestyle_phrase_grammar(entities_ner, life_obj):
 
     S = grammar.start() # axiom of the grammar
     word = get_word(grammar=grammar, non_terminal=S) # parses grammar through left-most derivation to create the word
-    return word
+    return word, True
 
 def antecedent_phrase_grammar(entities_ner, antecedent_obj):
   """
@@ -375,15 +375,15 @@ def antecedent_phrase_grammar(entities_ner, antecedent_obj):
 
   if 'ANTECEDENT' in entities_ner:
     if antecedent_obj['family_antecedents']:
-      return 'Yes Doctor, my family history includes ' + antecedent_obj['family_antecedents']
+      return 'Yes Doctor, my family history includes ' + antecedent_obj['family_antecedents'], True
     else:
-      return "No Doctor, I don't have family history"
+      return "No Doctor, I don't have family history", False
   
   elif 'PREGNANCY' in entities_ner:
     if len(antecedent_obj['obstetrical_antecedent']) == 0:
-      return "No Doctor, I don't have obstetrical antecedent"
+      return "No Doctor, I don't have obstetrical antecedent", False
     else:
-      return "I already had " + antecedent_obj['obstetrical_antecedent'][0]['nb_pregnancy'] + " grossesse(s) " + "and the last one was the " + antecedent_obj['obstetrical_antecedent'][0]['date_of_last_pregnancy']
+      return "I already had " + antecedent_obj['obstetrical_antecedent'][0]['nb_pregnancy'] + " grossesse(s) " + "and the last one was the " + antecedent_obj['obstetrical_antecedent'][0]['date_of_last_pregnancy'], True
   
   elif 'ALLERGY' in entities_ner:
     gram = """
@@ -412,13 +412,13 @@ def antecedent_phrase_grammar(entities_ner, antecedent_obj):
       if allergies['manifestation']:
         gram = gram + "A2 -> B1 '" + allergies['manifestation'] + "' [1.0] | [0.0]\n"
       else:
-        return "No doctor, I don't have any allergy"
+        return "No doctor, I don't have any allergy", False
     
     grammar = PCFG.fromstring(gram)  # we construct the grammar
 
     S = grammar.start() # axiom of the grammar
     word = get_word(grammar=grammar, non_terminal=S) # parses grammar through left-most derivation to create the word
-    return word
+    return word, True
   
   elif 'SURGERY' in entities_ner:
     gram = """
@@ -451,11 +451,11 @@ def antecedent_phrase_grammar(entities_ner, antecedent_obj):
 def generate_text(category, clinical_case=None, response=None, symptom_entities = None, life_style_entities = None, antecedent_entities = None):
   # clinical_case = get_clinical_case('ae538715-2b8a-4680-bfb8-a4ccebf4b988')
   if category == 'salutation':
-    return 'Good ' + getPeriod() + ' Doctor'
+    return 'Good ' + getPeriod() + ' Doctor', True
   elif category == 'initial_problem':
-    return "I don't feel well doctor. " + clinical_case['initial_problem']
+    return "I don't feel well doctor. " + clinical_case['initial_problem'], True
   elif category == 'repetition':
-    return 'repetition'
+    return 'repetition', True
   elif category == 'life_style':
     if life_style_entities != None:
       return lifestyle_phrase_grammar(entities_ner=life_style_entities, life_obj=clinical_case['life_style'][0])
@@ -468,9 +468,9 @@ def generate_text(category, clinical_case=None, response=None, symptom_entities 
     if symptom_entities != None:
       symptoms = getSymptoms(clinical_case, symptom_entities['SYMPTOM'])
       if symptoms == None:
-        return "No doctor, I don't have " + symptom_entities['SYMPTOM']
+        return "No doctor, I don't have " + symptom_entities['SYMPTOM'], False
       else:
-        return symptom_phrase_grammar(entities_ner=symptom_entities, symptom_obj=symptoms)
+        return symptom_phrase_grammar(entities_ner=symptom_entities, symptom_obj=symptoms), True
     return
 
 @api_view(['POST'])
@@ -491,22 +491,22 @@ def response(request):
       res = "False classification :-("
     else:
       symptom_entities = getkeySymptom(text)["data"]
-      res = generate_text('symptoms', clinical_case=clinical_case[0], symptom_entities=symptom_entities)
+      res, in_case = generate_text('symptoms', clinical_case=clinical_case[0], symptom_entities=symptom_entities)
   elif cl == "Life Style":
     life_style_entities = getkeyLifeStyle(text)["data"]
-    res = generate_text('life_style', clinical_case=clinical_case[0], life_style_entities=life_style_entities)
+    res, in_case = generate_text('life_style', clinical_case=clinical_case[0], life_style_entities=life_style_entities)
   elif cl == "Antecedent":
     antecedent_entities = getkeyAntecedent(text)["data"]
-    res = generate_text('antecedent', clinical_case=clinical_case[0], antecedent_entities=antecedent_entities)
+    res, in_case = generate_text('antecedent', clinical_case=clinical_case[0], antecedent_entities=antecedent_entities)
   elif cl == "Salutation":
-    res = generate_text('salutation')
+    res, in_case = generate_text('salutation')
   elif cl == "Initial Problem":
-    res = generate_text('initial_problem', clinical_case=clinical_case[0])
+    res, in_case = generate_text('initial_problem', clinical_case=clinical_case[0])
   elif cl == "Repetition":
     if "response" in body:
       resp = body["response"]
       if resp:
-        res = generate_text('repetition',response=resp)
+        res, in_case = generate_text('repetition',response=resp)
       else:
         result = {
           "status": False,
@@ -521,8 +521,9 @@ def response(request):
       return Response(result, status = status.HTTP_404_NOT_FOUND)
 
   result = {
-    "status": True,
-    "response": res.replace("?", "")
+    "status": in_case,
+    "response": res,
+    "class": cl
   }
   return Response(result, status.HTTP_200_OK)
 
