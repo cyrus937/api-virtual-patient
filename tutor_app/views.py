@@ -487,7 +487,7 @@ def response(request):
 
   print(cl)
   if cl == "Symptoms":
-    if text in ["Hello, hello"]:
+    if text in ["Hello", "hello"]:
       res = {
         "message": "False classification :-("
       }
