@@ -22,7 +22,6 @@ from datetime import datetime, timezone
 import pytz
 from difflib import SequenceMatcher
 
-from nltk.parse.generate import generate
 from nltk import PCFG
 from random import randint
 
