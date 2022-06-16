@@ -487,8 +487,13 @@ def response(request):
 
   print(cl)
   if cl == "Symptoms":
-    symptom_entities = getkeySymptom(text)["data"]
-    res = generate_text('symptoms', clinical_case=clinical_case[0], symptom_entities=symptom_entities)
+    if text in ["Hello, hello"]:
+      res = {
+        "message": "False classification :-("
+      }
+    else:
+      symptom_entities = getkeySymptom(text)["data"]
+      res = generate_text('symptoms', clinical_case=clinical_case[0], symptom_entities=symptom_entities)
   elif cl == "Life Style":
     life_style_entities = getkeyLifeStyle(text)["data"]
     res = generate_text('life_style', clinical_case=clinical_case[0], life_style_entities=life_style_entities)
@@ -519,7 +524,7 @@ def response(request):
 
   result = {
     "status": True,
-    "response": res
+    "response": res.replace("?", "")
   }
   return Response(result, status.HTTP_200_OK)
 
