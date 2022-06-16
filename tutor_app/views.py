@@ -2,6 +2,7 @@ from unittest import result
 from django.shortcuts import render
 
 import pandas as pd
+from learner_app.views import getRating
 import numpy as np
 from patient_app.views import clinicalCase, getClinicalCase
 from rest_framework import status, viewsets
@@ -25,17 +26,17 @@ from nltk.parse.generate import generate
 from nltk import PCFG
 from random import randint
 
-url_symptom = "https://50493.gradio.app/api/predict/"
-session_symptom = "olqjqf1op3p"
+url_symptom = "https://50802.gradio.app/api/predict/"
+session_symptom = "j7ab2l1yvhh"
 
-url_life_style = "https://28136.gradio.app/api/predict/"
-session_life_style = "5o0pzbjbkr"
+url_life_style = "https://19845.gradio.app/api/predict/"
+session_life_style = "y198tpq6jo"
 
-url_antecedent = "https://15687.gradio.app/api/predict/"
-session_antecedent = "ifii9pgd15"
+url_antecedent = "https://31292.gradio.app/api/predict/"
+session_antecedent = "5ntg9kovxdc"
 
-url_classify = "https://58137.gradio.app/api/predict/"
-session_classify = "u796k1gy78p"
+url_classify = "https://29993.gradio.app/api/predict/"
+session_classify = "bs7cgazofz8"
 
 # Create your views here.
 def getkeySymptom(text):
@@ -522,6 +523,56 @@ def response(request):
     "response": res
   }
   return Response(result, status.HTTP_200_OK)
+
+def checkDifficulty(rate):
+  if 0 <= rate <= 0.4:
+    return "EASY"
+  elif 0.5 <= rate <= 0.7:
+    return "MEDIUM"
+  else:
+    return "HARD"
+
+@api_view(["POST"])
+def chooseClinicalCase(request):
+  body = json.loads(request.body)
+  context = {
+        'request': request,
+    }
+
+  if body == None:
+    result = {
+      "status": "FAILURE",
+      "message": "random, learner, system required"
+    }
+    return Response(result, status.HTTP_204_NO_CONTENT)
+  if 'random' not in body:
+    result = {
+      "status": "FAILURE",
+      "message": "random required"
+    }
+    return Response(result, status.HTTP_204_NO_CONTENT)
+  if 'learner' not in body:
+    result = {
+      "status": "FAILURE",
+      "message": "learner required"
+    }
+    return Response(result, status.HTTP_204_NO_CONTENT)
+  if 'system' not in body:
+    result = {
+      "status": "FAILURE",
+      "message": "system required"
+    }
+    return Response(result, status.HTTP_204_NO_CONTENT)
+  
+  system_name = ""
+  systems, diseases, details = getRating(request=request, pk=body["leaner"])
+
+  if body["random"]:
+    for key in systems:
+      if systems[key] == 0.00:
+        system_name = key
+        break
+  return 0
 
 @api_view(['GET'])
 def errorPage(request):
