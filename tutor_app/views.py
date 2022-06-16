@@ -488,9 +488,7 @@ def response(request):
   print(cl)
   if cl == "Symptoms":
     if text in ["Hello", "hello"]:
-      res = {
-        "message": "False classification :-("
-      }
+      res = "False classification :-("
     else:
       symptom_entities = getkeySymptom(text)["data"]
       res = generate_text('symptoms', clinical_case=clinical_case[0], symptom_entities=symptom_entities)
