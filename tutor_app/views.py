@@ -492,14 +492,38 @@ def response(request):
     if text in ["Hello", "hello"]:
       res = "False classification :-("
     else:
-      symptom_entities = getkeySymptom(text)["data"]
-      res, symp, in_case = generate_text('symptoms', clinical_case=clinical_case[0], symptom_entities=symptom_entities)
+      try:
+        symptom_entities = getkeySymptom(text)["data"]
+        res, symp, in_case = generate_text('symptoms', clinical_case=clinical_case[0], symptom_entities=symptom_entities)
+      except:
+        result = {
+          "status": False,
+          "response": "I don't quite understand, can you repeat",
+          "class": cl
+        }
+        return Response(result, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
   elif cl == "Life Style":
-    life_style_entities = getkeyLifeStyle(text)["data"]
-    res, in_case = generate_text('life_style', clinical_case=clinical_case[0], life_style_entities=life_style_entities)
+    try:
+      life_style_entities = getkeyLifeStyle(text)["data"]
+      res, in_case = generate_text('life_style', clinical_case=clinical_case[0], life_style_entities=life_style_entities)
+    except:
+      result = {
+          "status": False,
+          "response": "I don't quite understand, can you repeat",
+          "class": cl
+        }
+      return Response(result, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
   elif cl == "Antecedent":
-    antecedent_entities = getkeyAntecedent(text)["data"]
-    res, in_case = generate_text('antecedent', clinical_case=clinical_case[0], antecedent_entities=antecedent_entities)
+    try:
+      antecedent_entities = getkeyAntecedent(text)["data"]
+      res, in_case = generate_text('antecedent', clinical_case=clinical_case[0], antecedent_entities=antecedent_entities)
+    except:
+      result = {
+          "status": False,
+          "response": "I don't quite understand, can you repeat",
+          "class": cl
+        }
+      return Response(result, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
   elif cl == "Salutation":
     res, in_case = generate_text('salutation')
   elif cl == "Initial Problem":
