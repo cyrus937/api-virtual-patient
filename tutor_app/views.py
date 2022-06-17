@@ -468,9 +468,9 @@ def generate_text(category, clinical_case=None, response=None, symptom_entities 
     if symptom_entities != None:
       symptoms = getSymptoms(clinical_case, symptom_entities['SYMPTOM'])
       if symptoms == None:
-        return "No doctor, I don't have " + symptom_entities['SYMPTOM'], False
+        return "No doctor, I don't have " + symptom_entities['SYMPTOM'], symptom_entities['SYMPTOM'], False
       else:
-        return symptom_phrase_grammar(entities_ner=symptom_entities, symptom_obj=symptoms), True
+        return symptom_phrase_grammar(entities_ner=symptom_entities, symptom_obj=symptoms), symptom_entities['SYMPTOM'], True
     return
 
 @api_view(['POST'])
@@ -479,6 +479,8 @@ def response(request):
 
   text = body["question"]
   id = body["clinical_case"]
+
+  symp = None
   
 
   clinical_case = clinicalCase(request=request, id_clinical_case=id)
@@ -491,7 +493,7 @@ def response(request):
       res = "False classification :-("
     else:
       symptom_entities = getkeySymptom(text)["data"]
-      res, in_case = generate_text('symptoms', clinical_case=clinical_case[0], symptom_entities=symptom_entities)
+      res, symp, in_case = generate_text('symptoms', clinical_case=clinical_case[0], symptom_entities=symptom_entities)
   elif cl == "Life Style":
     life_style_entities = getkeyLifeStyle(text)["data"]
     res, in_case = generate_text('life_style', clinical_case=clinical_case[0], life_style_entities=life_style_entities)
@@ -523,7 +525,8 @@ def response(request):
   result = {
     "status": in_case,
     "response": res,
-    "class": cl
+    "class": cl,
+    "symptom": symp if symp else None
   }
   return Response(result, status.HTTP_200_OK)
 
