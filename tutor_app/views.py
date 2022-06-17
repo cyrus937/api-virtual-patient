@@ -545,13 +545,20 @@ def response(request):
         "message": "No field response"
       }
       return Response(result, status = status.HTTP_404_NOT_FOUND)
-
-  result = {
-    "status": in_case,
-    "response": res,
-    "class": cl,
-    "symptom": symp if symp else None
-  }
+  try:
+    result = {
+      "status": in_case,
+      "response": res,
+      "class": cl,
+      "symptom": symp if symp else None
+    }
+  except:
+    result = {
+          "status": False,
+          "response": "I don't quite understand, can you repeat",
+          "class": cl
+        }
+    return Response(result, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
   return Response(result, status.HTTP_200_OK)
 
 def checkDifficulty(rate):
