@@ -40,7 +40,7 @@ session_classify = "405706fp1hk"
 list_symptoms = [' congestion', ' belly_pain', ' phlegm', ' sinus_pressure', ' continuous_sneezing', 
 ' abdominal_pain', ' high_fever', ' receiving_blood_transfusion', ' yellowing_of_eyes', ' vomiting', ' palpitations', 
 ' blurred_and_distorted_vision', ' redness_of_eyes', ' muscle_pain', ' diarrhoea', ' red_spots_over_body', ' sweating', 
-' irritability', ' toxic_look_(typhos)', ' mild_fever', ' swelled_lymph_nodes', ' constipation', ' slurred_speech', ' chest_pain', 
+' irritability', ' toxic_look_typhos', ' mild_fever', ' swelled_lymph_nodes', ' constipation', ' slurred_speech', ' chest_pain', 
 ' breathlessness', ' cough', ' receiving_unsterile_injections', ' weight_loss', ' runny_nose', ' nausea', ' skin_rash', ' anxiety', 
 ' chills', ' excessive_hunger', ' lethargy', ' yellowish_skin', ' fast_heart_rate', ' loss_of_smell', ' loss_of_appetite', 'itching', 
 ' rusty_sputum', ' drying_and_tingling_lips', ' fatigue', ' yellow_urine', ' blood_in_sputum', ' joint_pain', ' dark_urine', ' headache', 
