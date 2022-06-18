@@ -37,6 +37,21 @@ session_antecedent = "9oynie6xe"
 url_classify = "https://13490.gradio.app/api/predict/"
 session_classify = "405706fp1hk"
 
+list_symptoms = [' congestion', ' belly_pain', ' phlegm', ' sinus_pressure', ' continuous_sneezing', 
+' abdominal_pain', ' high_fever', ' receiving_blood_transfusion', ' yellowing_of_eyes', ' vomiting', ' palpitations', 
+' blurred_and_distorted_vision', ' redness_of_eyes', ' muscle_pain', ' diarrhoea', ' red_spots_over_body', ' sweating', 
+' irritability', ' toxic_look_(typhos)', ' mild_fever', ' swelled_lymph_nodes', ' constipation', ' slurred_speech', ' chest_pain', 
+' breathlessness', ' cough', ' receiving_unsterile_injections', ' weight_loss', ' runny_nose', ' nausea', ' skin_rash', ' anxiety', 
+' chills', ' excessive_hunger', ' lethargy', ' yellowish_skin', ' fast_heart_rate', ' loss_of_smell', ' loss_of_appetite', 'itching', 
+' rusty_sputum', ' drying_and_tingling_lips', ' fatigue', ' yellow_urine', ' blood_in_sputum', ' joint_pain', ' dark_urine', ' headache', 
+' throat_irritation', ' malaise']
+
+def remove(symptoms):
+  li_symp = []
+  for symp in symptoms:
+    li_symp.append(symp.replace(" ", ""))
+
+list_symptoms = remove(list_symptoms)
 # Create your views here.
 def getkeySymptom(text):
   r = rq.post(url_symptom, json={"fn_index": 0, "data": [text], "session_hash": session_symptom})

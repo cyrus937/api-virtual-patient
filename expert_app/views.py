@@ -10,6 +10,8 @@ import json
 import time
 import os
 
+from tutor_app.views import similar
+
 from .models import *
 from .serializers import *
 
@@ -28,7 +30,25 @@ print("")
 print("Successful import")
 print("")
 
-list_diseases = ['Malaria', 'Tuberculosis', 'Diabetes_', 'Typhoid', 'hepatitis_A', 'Hepatitis_B', 'Hypoglycemia', 'Common_Cold', 'Chicken_pox', 'Pneumonia']
+list_symptoms = [' congestion', ' belly_pain', ' phlegm', ' sinus_pressure', ' continuous_sneezing', 
+' abdominal_pain', ' high_fever', ' receiving_blood_transfusion', ' yellowing_of_eyes', ' vomiting', ' palpitations', 
+' blurred_and_distorted_vision', ' redness_of_eyes', ' muscle_pain', ' diarrhoea', ' red_spots_over_body', ' sweating', 
+' irritability', ' toxic_look_(typhos)', ' mild_fever', ' swelled_lymph_nodes', ' constipation', ' slurred_speech', ' chest_pain', 
+' breathlessness', ' cough', ' receiving_unsterile_injections', ' weight_loss', ' runny_nose', ' nausea', ' skin_rash', ' anxiety', 
+' chills', ' excessive_hunger', ' lethargy', ' yellowish_skin', ' fast_heart_rate', ' loss_of_smell', ' loss_of_appetite', 'itching', 
+' rusty_sputum', ' drying_and_tingling_lips', ' fatigue', ' yellow_urine', ' blood_in_sputum', ' joint_pain', ' dark_urine', ' headache', 
+' throat_irritation', ' malaise']
+
+def remove(symptoms):
+  li_symp = []
+  for symp in symptoms:
+    li_symp.append(symp.replace(" ", ""))
+
+list_symptoms = remove(list_symptoms)
+print("Remove space successful")
+
+list_diseases = ['Malaria', 'Tuberculosis', 'Diabetes_', 'Typhoid', 'hepatitis_A', 'Hepatitis_B', 'Hypoglycemia', 'Common_Cold', 
+'Chicken_pox', 'Pneumonia']
 
 def infere_network(disease, symptoms):
   global bn
@@ -57,11 +77,18 @@ def inference_disease_symptoms(request):
     return Response(result, status.HTTP_204_NO_CONTENT)
   
   else:
+    new_symptoms = {}
     symptoms = body['symptoms']
+    for key in symptoms:
+      for symp in list_symptoms:
+        if similar(key, symp) > 0.8:
+          new_symptoms[symp] = symptoms[key]
+          break
+
     
     if 'disease' not in body:
       for disease in list_diseases:
-        res[disease] = infere_network(disease, symptoms)[1]
+        res[disease] = infere_network(disease, new_symptoms)[1]
 
       dic = Convert(sorted(res.items(), key=lambda x: x[1], reverse=True), {})
       res = dict(list(dic.items())[0: 5])
@@ -70,7 +97,7 @@ def inference_disease_symptoms(request):
     else:
       disease = body['disease']
       for dis in disease:
-        res[dis] = infere_network(dis, symptoms)[1]
+        res[dis] = infere_network(dis, new_symptoms)[1]
       
       return Response(res, status=status.HTTP_200_OK)
 
