@@ -25,17 +25,17 @@ from difflib import SequenceMatcher
 from nltk import PCFG
 from random import randint
 
-url_symptom = "https://10580.gradio.app/api/predict/"
-session_symptom = "6woe8f8ms3g"
+url_symptom = "https://41074.gradio.app/api/predict/"
+session_symptom = "qqseowsqmx"
 
-url_life_style = "https://54156.gradio.app/api/predict/"
-session_life_style = "2g3s426v8lv"
+url_life_style = "https://46691.gradio.app/api/predict/"
+session_life_style = "ul6v7doc7g"
 
-url_antecedent = "https://12499.gradio.app/api/predict/"
-session_antecedent = "hpelppy0w3v"
+url_antecedent = "https://49084.gradio.app/api/predict/"
+session_antecedent = "9oynie6xe"
 
-url_classify = "https://53314.gradio.app/api/predict/"
-session_classify = "l34rxoaoz"
+url_classify = "https://13490.gradio.app/api/predict/"
+session_classify = "405706fp1hk"
 
 # Create your views here.
 def getkeySymptom(text):

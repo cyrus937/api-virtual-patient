@@ -69,7 +69,8 @@ def inference_disease_symptoms(request):
       return Response(res, status=status.HTTP_200_OK)
     else:
       disease = body['disease']
-      res[disease] = infere_network(disease, symptoms)[1]
+      for dis in disease:
+        res[dis] = infere_network(dis, symptoms)[1]
       
       return Response(res, status=status.HTTP_200_OK)
 
