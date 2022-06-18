@@ -53,6 +53,7 @@ def remove(symptoms):
   return li_symp
 
 list_symptoms = remove(list_symptoms)
+print("Remove space successful tutor")
 # Create your views here.
 def getkeySymptom(text):
   r = rq.post(url_symptom, json={"fn_index": 0, "data": [text], "session_hash": session_symptom})
@@ -466,6 +467,7 @@ def antecedent_phrase_grammar(entities_ner, antecedent_obj):
 
 def generate_text(category, clinical_case=None, response=None, symptom_entities = None, life_style_entities = None, antecedent_entities = None):
   # clinical_case = get_clinical_case('ae538715-2b8a-4680-bfb8-a4ccebf4b988')
+  global list_symptoms
   if category == 'salutation':
     return 'Good ' + getPeriod() + ' Doctor', True
   elif category == 'initial_problem':
@@ -482,7 +484,11 @@ def generate_text(category, clinical_case=None, response=None, symptom_entities 
     return
   elif category == 'symptoms':
     if symptom_entities != None:
-      symptoms = getSymptoms(clinical_case, symptom_entities['SYMPTOM'])
+      for symp in list_symptoms:
+        if similar(symptom_entities['SYMPTOM'], symp) > 0.8:
+          s = symp
+          break
+      symptoms = getSymptoms(clinical_case, s)
       if symptoms == None:
         return "No doctor, I don't have " + symptom_entities['SYMPTOM'], symptom_entities['SYMPTOM'], False
       else:

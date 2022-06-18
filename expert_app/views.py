@@ -46,7 +46,7 @@ def remove(symptoms):
   return li_symp
 
 list_symptoms = remove(list_symptoms)
-print("Remove space successful")
+print("Remove space successful expert")
 
 list_diseases = ['Malaria', 'Tuberculosis', 'Diabetes_', 'Typhoid', 'hepatitis_A', 'Hepatitis_B', 'Hypoglycemia', 'Common_Cold', 
 'Chicken_pox', 'Pneumonia']
