@@ -49,7 +49,11 @@ list_symptoms = [' congestion', ' belly_pain', ' phlegm', ' sinus_pressure', ' c
 def remove(symptoms):
   li_symp = []
   for symp in symptoms:
-    li_symp.append(symp.replace(" ", ""))
+    t = symp.replace(" ", "")
+    if "_" in t:
+      li_symp.append(t.replace("_", ""))
+    else:
+      li_symp.append(t)
   return li_symp
 
 list_symptoms = remove(list_symptoms)
