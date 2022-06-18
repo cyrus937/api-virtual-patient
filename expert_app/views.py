@@ -65,6 +65,9 @@ def Convert(tup, di):
 
 @api_view(['POST'])
 def inference_disease_symptoms(request):
+
+  global list_symptoms
+  
   res = {}
   symp = {}
   body = json.loads(request.body)
