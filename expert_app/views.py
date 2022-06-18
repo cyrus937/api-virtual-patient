@@ -43,6 +43,7 @@ def remove(symptoms):
   li_symp = []
   for symp in symptoms:
     li_symp.append(symp.replace(" ", ""))
+  return li_symp
 
 list_symptoms = remove(list_symptoms)
 print("Remove space successful")
@@ -67,7 +68,7 @@ def Convert(tup, di):
 def inference_disease_symptoms(request):
 
   global list_symptoms
-  
+
   res = {}
   symp = {}
   body = json.loads(request.body)
