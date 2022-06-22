@@ -1,4 +1,8 @@
+from os import system
 from django.shortcuts import redirect
+from learner_app.models import RatingDisease, RatingSystem, System, Disease as DIS
+from learner_app.serializers import SystemSerializer
+from django.core.serializers import deserialize
 from rest_framework import status, viewsets, generics
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -12,6 +16,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from django.contrib.auth.models import User
+
+from difflib import SequenceMatcher
 
 from .models import *
 from .serializers import *
@@ -87,8 +93,16 @@ class LeanerPhysicianViewSet(viewsets.ModelViewSet):
   queryset = LeanerPhysician.objects.all()
   serializer_class = LeanerPhysicianSerializer
 
+  #clinical_cases = ClinicalCaseSerializer(ClinicalCase.objects.all(), many=True, context=context).data
+
   def create(self, request, *args, **kwargs):
-        print(request.data)
+        context = {
+          'request': request,
+        }
+        systems = System.objects.all()
+        diseases = DIS.objects.all()
+        #systems = SystemSerializer()
+        #learnerPhysician = LeanerPhysician.objects.create(request.data)
         serializer = self.get_serializer(data = request.data)
         
         print(serializer.is_valid())
@@ -102,6 +116,14 @@ class LeanerPhysicianViewSet(viewsets.ModelViewSet):
             )
             user.set_password(serializer.data["password"])
             user.save()
+            learnerPhysician = LeanerPhysician.objects.get(pk=serializer.data["id"])
+            print(learnerPhysician)
+            for sys in systems:
+              ratingSystem = RatingSystem.objects.create(learner=learnerPhysician, system=sys)
+              ratingSystem.save()
+              for dis in diseases:
+                ratingDisease = RatingDisease.objects.create(learner=learnerPhysician, disease=dis, system=sys)
+                ratingDisease.save()
             return Response({
                 "status":True,
                 "RequestId": str(uuid.uuid4()),
@@ -252,8 +274,16 @@ class DiseaseViewSet(viewsets.ModelViewSet):
   queryset = Disease.objects.all()
   serializer_class = DiseaseSerializer
 
+def similar(a, b):
+  return SequenceMatcher(None, a, b).ratio()
+
 def Convert(tup, di):
   for a, b in tup.items(): 
+    di[a] = b
+  return di
+
+def Convert1(tup, di):
+  for a, b in tup: 
     di[a] = b
   return di
 
@@ -274,7 +304,7 @@ def getStat(request):
   
   return Response(result, status=status.HTTP_200_OK)
 
-def clinicalCase(request, id_clinical_case):
+def clinicalCase(request, id_clinical_case, system=None, diseas=None, diff=None):
   l = []
   list_medical_parameter = []
   list_physical_dignosis = []
@@ -290,7 +320,10 @@ def clinicalCase(request, id_clinical_case):
   if id_clinical_case != 'all':
     clinical_cases = ClinicalCaseSerializer(ClinicalCase.objects.all().filter(id = id_clinical_case), many=True, context=context).data
   else:
-    clinical_cases = ClinicalCaseSerializer(ClinicalCase.objects.all(), many=True, context=context).data
+    if system:
+      clinical_cases = ClinicalCaseSerializer(ClinicalCase.objects.all().filter(system=system, final_diagnosis=diseas, difficulty=diff), many=True, context=context).data
+    else:
+      clinical_cases = ClinicalCaseSerializer(ClinicalCase.objects.all(), many=True, context=context).data
   
   for cl in clinical_cases:
     cl = Convert(cl, {})
@@ -399,9 +432,11 @@ def clinicalCase(request, id_clinical_case):
     cl["medical_antecedent"] = list_medical_antecedent
     list_medical_antecedent = []
 
+    if diseas and similar(diseas, cl["final_diagnosis"]) > 0.8 and diff and cl["difficulty"] == diff:
+      return cl
     l.append(cl)  
   
-  return l
+  return l if l!=[] else None
 
 @api_view(['GET'])
 def getClinicalCase(request, id_clinical_case):

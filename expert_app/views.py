@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from learner_app.models import System
+from patient_app.views import Convert1
 
 from rest_framework import status, viewsets
 from rest_framework.response import Response
@@ -29,7 +31,6 @@ bn=gum.loadBN("/app/expert_app/media/Bayesian_network.bif")
 print("")
 print("Successful import")
 print("")
-
 list_symptoms = [' congestion', ' belly_pain', ' phlegm', ' sinus_pressure', ' continuous_sneezing', 
 ' abdominal_pain', ' high_fever', ' receiving_blood_transfusion', ' yellowing_of_eyes', ' vomiting', ' palpitations', 
 ' blurred_and_distorted_vision', ' redness_of_eyes', ' muscle_pain', ' diarrhoea', ' red_spots_over_body', ' sweating', 
@@ -59,10 +60,6 @@ def infere_network(disease, symptoms):
   ie.makeInference()
   return ie.posterior(disease)
 
-def Convert(tup, di):
-  for a, b in tup: 
-    di[a] = b
-  return di
 
 @api_view(['POST'])
 def inference_disease_symptoms(request):
@@ -94,7 +91,7 @@ def inference_disease_symptoms(request):
       for disease in list_diseases:
         res[disease] = infere_network(disease, new_symptoms)[1]
 
-      dic = Convert(sorted(res.items(), key=lambda x: x[1], reverse=True), {})
+      dic = Convert1(sorted(res.items(), key=lambda x: x[1], reverse=True), {})
       res = dict(list(dic.items())[0: 5])
       
       return Response(res, status=status.HTTP_200_OK)

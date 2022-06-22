@@ -62,10 +62,10 @@ def getRating(request, pk):
     learner = LeanerPhysicianSerializer(LeanerPhysician.objects.get(pk=pk), many=False, context=context).data
   except LeanerPhysician.DoesNotExist: 
     return JsonResponse({'message': 'The learner does not exist'}, status=status.HTTP_404_NOT_FOUND)
-  if request.method == 'GET':
+  if request.method in ['GET', 'POST']:
 
     rating_system = RatingSystemSerializer(RatingSystem.objects.all().filter(learner=learner["id"]), many=True, context=context).data
-
+    
     for sys in rating_system:
       sys = Convert(sys, {})
       s = sys["system"].split('/')
@@ -92,6 +92,45 @@ def getRating(request, pk):
       diseases[dis["name"]] = dis["rating"]
     
   return systems, diseases, details
+
+def getDate(request, pk):
+  systems = {}
+  det = {}
+  details = {}
+  context = {
+        'request': request,
+    }
+
+  try: 
+    learner = LeanerPhysicianSerializer(LeanerPhysician.objects.get(pk=pk), many=False, context=context).data
+  except LeanerPhysician.DoesNotExist: 
+    return JsonResponse({'message': 'The learner does not exist'}, status=status.HTTP_404_NOT_FOUND)
+  if request.method == 'GET':
+
+    rating_system = RatingSystemSerializer(RatingSystem.objects.all().filter(learner=learner["id"]), many=True, context=context).data
+
+    for sys in rating_system:
+      sys = Convert(sys, {})
+      s = sys["system"].split('/')
+      syst = SystemSerializer(System.objects.get(pk=s[-2]), many=False, context=context).data
+      systems[syst["name"]] = sys["updated_at"]
+
+      diseases_rating = RatingDiseaseSerializer(RatingDisease.objects.all().filter(system=s[-2], learner=learner["id"]), many=True, context=context).data
+      for dis_rate in diseases_rating:
+        dis_rate = Convert(dis_rate, {})
+        d = dis_rate["disease"].split('/')
+        dis = DiseaseSerializer(Disease.objects.get(pk=d[-2]), many=False, context=context).data
+        det[dis["name"]] = dis_rate["updated_at"]
+      
+      details[syst["name"]] = det
+
+      det = {}
+
+    
+    #rating_disease = RatingDiseaseSerializer(RatingDisease.objects.all().filter(learner=learner["id"]), many=True, context=context).data
+    
+    
+  return systems, details
 
 @api_view(['GET'])
 def getratingUser(request, pk):

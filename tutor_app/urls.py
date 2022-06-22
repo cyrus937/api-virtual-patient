@@ -8,6 +8,7 @@ urlpatterns = [
     #path('', include(routers.urls)),
 
     path('response/',views.response, name='response'),
+    path('selectClinicalCase/',views.selectClinicalCase, name='selectClinicalCase'),
     #path('rating/',views.rating, name='rating'),
     re_path(r'^[a-zA-Z0-9/,;:!\\*-+^$ù&é(-è_çà)]+/$', views.errorPage),
     

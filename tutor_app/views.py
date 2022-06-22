@@ -2,9 +2,9 @@ from unittest import result
 from django.shortcuts import render
 
 import pandas as pd
-from learner_app.views import getRating
+from learner_app.views import getDate, getRating
 import numpy as np
-from patient_app.views import clinicalCase, getClinicalCase
+from patient_app.views import Convert1, clinicalCase, getClinicalCase, similar
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -19,11 +19,15 @@ import json
 import ast
 
 from datetime import datetime, timezone
+from decimal import Decimal
 import pytz
-from difflib import SequenceMatcher
+
+from math import exp
 
 from nltk import PCFG
 from random import randint
+
+working_memory_capacity = 1000
 
 url_symptom = "https://41074.gradio.app/api/predict/"
 session_symptom = "qqseowsqmx"
@@ -170,8 +174,7 @@ def remove_spaces(word):
 
   return word
 
-def similar(a, b):
-  return SequenceMatcher(None, a, b).ratio()
+
 
 def max_similar(keywords, word):
   max = 0
@@ -595,8 +598,22 @@ def checkDifficulty(rate):
   else:
     return "HARD"
 
+def rappel(dict_date, dict_niveau_connaissance):
+  global working_memory_capacity
+  rap = {}
+  name = ""
+  date2 = datetime.now().date()
+  for key in dict_date.keys():
+    date1 = datetime.strptime(dict_date[key][0:10], '%Y-%m-%d').date()
+    number_days = (date2 - date1).days
+    rap[key] = Decimal(dict_niveau_connaissance[key]) + Decimal(exp(-1 * (number_days / working_memory_capacity)))
+
+  rap = Convert1(sorted(rap.items(), key=lambda x: x[1], reverse=True), {})
+  name = list(rap.keys())[-1]
+  return name
+
 @api_view(["POST"])
-def chooseClinicalCase(request):
+def selectClinicalCase(request):
   body = json.loads(request.body)
   context = {
         'request': request,
@@ -620,22 +637,92 @@ def chooseClinicalCase(request):
       "message": "learner required"
     }
     return Response(result, status.HTTP_204_NO_CONTENT)
-  if 'system' not in body:
-    result = {
-      "status": "FAILURE",
-      "message": "system required"
-    }
-    return Response(result, status.HTTP_204_NO_CONTENT)
   
   system_name = ""
-  systems, diseases, details = getRating(request=request, pk=body["leaner"])
+  disease_name = ""
+  systems, diseases, details = getRating(request=request, pk=body["learner"])
+
+  systems_date, details_date = getDate(request=request, pk=body["learner"])
 
   if body["random"]:
-    for key in systems:
-      if systems[key] == 0.00:
+
+    for key in list(systems.keys()):
+      if systems[key] == "0.000":
         system_name = key
-        break
-  return 0
+        dis = details[system_name]
+        for key1 in dis.keys():
+          if dis[key1] == "0.000":
+            disease_name = key1
+            case = clinicalCase(request, id_clinical_case="all", system=system_name, diseas=disease_name, diff="EASY")
+            if case:
+              break
+            else:
+              disease_name = ""
+              continue
+        if case :
+          break
+        else:
+          system_name = ""
+          continue
+    
+    if case:
+      result = {
+        "clinical_case":case if case else None,
+      }
+
+      return Response(result, status=status.HTTP_200_OK)
+    else:
+      system_name = rappel(dict_date=systems_date, dict_niveau_connaissance=systems)
+      dis = details[system_name]
+      for key in dis.keys():
+        if dis[key] == "0.000":
+          disease_name = key
+          case = clinicalCase(request, id_clinical_case="all", system=system_name, diseas=disease_name, diff="EASY")
+          if case:
+            break
+          else:
+            continue
+      if case:
+        result = {
+          "clinical_case":case if case else None,
+        }
+
+        return Response(result, status=status.HTTP_200_OK)
+      else:
+        disease_name = rappel(dict_date=details_date[system_name], dict_niveau_connaissance=details[system_name])
+        case = clinicalCase(request, id_clinical_case="all", diseas=disease_name, diff=checkDifficulty(details[system_name][disease_name]))
+  else:
+    if 'system' not in body:
+      result = {
+        "status": "FAILURE",
+        "message": "system required"
+      }
+      return Response(result, status.HTTP_204_NO_CONTENT)
+    
+    dis = details[body["system"]]
+    for key in dis.keys():
+      if dis[key] == "0.000":
+        disease_name = key
+        case = clinicalCase(request, id_clinical_case="all", system=system_name, diseas=disease_name, diff="EASY")
+        if case:
+          break
+        else:
+          continue
+    if case:
+      result = {
+        "clinical_case":case if case else None,
+      }
+
+      return Response(result, status=status.HTTP_200_OK)
+    else:
+      disease_name = rappel(dict_date=details_date[system_name], dict_niveau_connaissance=details[system_name])
+      case = clinicalCase(request, id_clinical_case="all", diseas=disease_name, diff=checkDifficulty(details[system_name][disease_name]))
+
+  result = {
+    "clinical_case":case if case else None,
+  }
+
+  return Response(result, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def errorPage(request):
