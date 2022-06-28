@@ -26,8 +26,8 @@ path = os.path.realpath(__file__)
 print("Le chemin du script est : " + path)
 print("")
 print("Importing the Bayesian network")
-bn=gum.loadBN("/app/expert_app/media/Bayesian_network.bif")
-#bn=gum.loadBN("expert_app\media\Bayesian_network.bif")
+#bn=gum.loadBN("/app/expert_app/media/Bayesian_network.bif")
+bn=gum.loadBN("expert_app\media\Bayesian_network.bif")
 print("")
 print("Successful import")
 print("")
@@ -60,6 +60,11 @@ def infere_network(disease, symptoms):
   ie.makeInference()
   return ie.posterior(disease)
 
+def getSymptom1(disease):
+  global bn
+  symps = bn.cpt(bn.idFromName(disease)).var_names.pop()
+
+  return set(symps)
 
 @api_view(['POST'])
 def inference_disease_symptoms(request):
