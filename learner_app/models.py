@@ -55,7 +55,7 @@ class WeightDiseaseSystem(models.Model):
 class RatingDisease(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     rating = models.DecimalField(max_digits=10, decimal_places=3, default=0.0)
-    learner = models.ForeignKey(patient_model.LeanerPhysician, on_delete=models.DO_NOTHING, null=False)
+    learner = models.ForeignKey(patient_model.LeanerPhysician, on_delete=models.CASCADE, null=False)
     disease = models.ForeignKey(Disease, on_delete=models.DO_NOTHING, null=False)
     system = models.ForeignKey(System, on_delete=models.DO_NOTHING, null=True)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
@@ -65,7 +65,7 @@ class RatingDisease(models.Model):
 class RatingSystem(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     rating = models.DecimalField(max_digits=10, decimal_places=3, default=0.0)
-    learner = models.ForeignKey(patient_model.LeanerPhysician, on_delete=models.DO_NOTHING, null=False)
+    learner = models.ForeignKey(patient_model.LeanerPhysician, on_delete=models.CASCADE, null=False)
     system = models.ForeignKey(System, on_delete=models.DO_NOTHING, null=False)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
