@@ -70,14 +70,9 @@ class Doctor(models.Model):
     name = models.CharField(max_length=50, null=False)
     first_name = models.CharField(max_length=50, null=False)
     phone_number = models.CharField(max_length=20, default='+237 ', unique=True)
-    address = models.CharField(max_length=30, null=False)
-    city = models.CharField(max_length=50, null=True)
-    cni = models.CharField(max_length=50, null=True, unique=True)
     sex = models.CharField(choices=SEX, max_length=50)
     specialty = models.CharField(choices=SPECIALTY, max_length=50)
     year_of_birth = models.DateField(null=False)
-    place_of_birth = models.CharField(max_length=150, null=False)
-    nationality = models.CharField(max_length=20, null=False)
     email = models.EmailField(max_length=50, unique=True, null=False)
     username = models.CharField(max_length=50, null=False)
     password = models.CharField(max_length=50, null=False)
@@ -218,6 +213,23 @@ class Evaluation(models.Model):
     learner_physician = models.ForeignKey(LeanerPhysician, on_delete=models.SET_NULL, null=True)
     virtual_case = models.ForeignKey(VirtualCase, on_delete=models.SET_NULL, null=True)
     feedback = models.ForeignKey(Feedback, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(null=False, auto_now_add=True)
+    deleted_at = models.DateTimeField(null=False, auto_now_add=True)
+    updated_at = models.DateTimeField(null=False, auto_now=True)
+
+class Diagnosis(models.Model):
+
+    TYPE = (
+        ('PHYSICAL DIAGNOSIS', 'PHYSICAL DIAGNOSIS'),
+        ('EXAM', 'EXAM')
+    )
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    type = models.CharField(max_length=20, choices=TYPE)
+    name = models.CharField(max_length=50, null=False)
+    result = models.CharField(max_length=50, null=True)
+    verdict = models.CharField(max_length=50, null=False)
+    evaluation = models.ForeignKey(Evaluation, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(null=False, auto_now_add=True)
     deleted_at = models.DateTimeField(null=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, auto_now=True)

@@ -185,6 +185,10 @@ class EvaluationViewSet(viewsets.ModelViewSet):
   queryset = Evaluation.objects.all()
   serializer_class = EvaluationSerializer
 
+class DiagnosisViewSet(viewsets.ModelViewSet):
+  queryset = Diagnosis.objects.all()
+  serializer_class = DiagnosisSerializer
+
 class HypothesisViewSet(viewsets.ModelViewSet):
   queryset = Hypothesis.objects.all()
   serializer_class = HypothesisSerializer
@@ -567,6 +571,10 @@ def getClinicalCase(request, id_clinical_case):
     l.append(cl)  
   
   return Response(l, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def save(request):
+  return 0
 
 @api_view(['GET'])
 def errorPage(request):
