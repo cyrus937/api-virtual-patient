@@ -4,7 +4,10 @@ from django.shortcuts import render
 import pandas as pd
 from learner_app.views import getDate, getRating
 import numpy as np
+from patient_app.models import ClinicalCase, LeanerPhysician
+from patient_app.serializers import ClinicalCaseSerializer, LeanerPhysicianSerializer
 from patient_app.views import Convert1, clinicalCase, getClinicalCase, similar
+#from expert_app.views import getSymptom1
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -27,19 +30,21 @@ from math import exp
 from nltk import PCFG
 from random import randint
 
+import pyAgrum as gum
+
 working_memory_capacity = 1000
 
-url_symptom = "https://41074.gradio.app/api/predict/"
-session_symptom = "qqseowsqmx"
+url_symptom = "https://30098.gradio.app/api/predict/"
+session_symptom = "dzu4n5qd279"
 
-url_life_style = "https://46691.gradio.app/api/predict/"
-session_life_style = "ul6v7doc7g"
+url_life_style = "https://26678.gradio.app/api/predict/"
+session_life_style = "15mv6sgd6bk"
 
-url_antecedent = "https://49084.gradio.app/api/predict/"
-session_antecedent = "9oynie6xe"
+url_antecedent = "https://46434.gradio.app/api/predict/"
+session_antecedent = "xxce66zbf7c"
 
-url_classify = "https://13490.gradio.app/api/predict/"
-session_classify = "405706fp1hk"
+url_classify = "https://43935.gradio.app/api/predict/"
+session_classify = "h19kj66utaa"
 
 list_symptoms = [' congestion', ' belly_pain', ' phlegm', ' sinus_pressure', ' continuous_sneezing', 
 ' abdominal_pain', ' high_fever', ' receiving_blood_transfusion', ' yellowing_of_eyes', ' vomiting', ' palpitations', 
@@ -49,6 +54,13 @@ list_symptoms = [' congestion', ' belly_pain', ' phlegm', ' sinus_pressure', ' c
 ' chills', ' excessive_hunger', ' lethargy', ' yellowish_skin', ' fast_heart_rate', ' loss_of_smell', ' loss_of_appetite', 'itching', 
 ' rusty_sputum', ' drying_and_tingling_lips', ' fatigue', ' yellow_urine', ' blood_in_sputum', ' joint_pain', ' dark_urine', ' headache', 
 ' throat_irritation', ' malaise']
+
+bn=gum.loadBN("expert_app\media\Bayesian_network.bif")
+def getSymptom1(disease):
+  global bn
+  symps = bn.cpt(bn.idFromName(disease)).var_names.pop()
+
+  return set(symps)
 
 def remove(symptoms):
   li_symp = []
@@ -96,12 +108,14 @@ def classifyText(text):
 def getPeriod():
   now = datetime.now()
   hr = now.hour + 1 # GMT+1  in Cameroon
-  if (hr > 5 and hr < 12):
+  if (hr >= 5 and hr < 12):
     return 'morning'
-  elif (hr > 12 and hr < 18):
+  elif (hr >= 12 and hr < 18):
     return 'afternoon'
-  else:
+  elif (hr >= 18 and hr < 22):
     return 'evening'
+  else:
+    return 'night'
 
 def getSymptoms(clinical_case, symptom):
   symptoms = clinical_case['symptom']
@@ -497,9 +511,9 @@ def generate_text(category, clinical_case=None, response=None, symptom_entities 
           break
       symptoms = getSymptoms(clinical_case, s)
       if symptoms == None:
-        return "No doctor, I don't have " + symptom_entities['SYMPTOM'], symptom_entities['SYMPTOM'], False
+        return "No doctor, I don't have " + symptom_entities['SYMPTOM'], s, False
       else:
-        return symptom_phrase_grammar(entities_ner=symptom_entities, symptom_obj=symptoms), symptom_entities['SYMPTOM'], True
+        return symptom_phrase_grammar(entities_ner=symptom_entities, symptom_obj=symptoms), s, True
     return
 
 @api_view(['POST'])
@@ -722,6 +736,132 @@ def selectClinicalCase(request):
     "clinical_case":case if case else None,
   }
 
+  return Response(result, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def marking(request):
+  body = json.loads(request.body)
+  context = {
+        'request': request,
+    }
+
+  if body == None:
+    result = {
+      "status": "FAILURE",
+      "message": "random, learner, system required"
+    }
+    return Response(result, status.HTTP_204_NO_CONTENT)
+  if 'symptoms' not in body:
+    result = {
+      "status": "FAILURE",
+      "message": "symptoms required"
+    }
+    return Response(result, status.HTTP_204_NO_CONTENT)
+  if 'learner' not in body:
+    result = {
+      "status": "FAILURE",
+      "message": "learner required"
+    }
+    return Response(result, status.HTTP_204_NO_CONTENT)
+  if 'clinical_case' not in body:
+    result = {
+      "status": "FAILURE",
+      "message": "clinical_case required"
+    }
+    return Response(result, status.HTTP_204_NO_CONTENT)
+  if 'procedure' not in body:
+    result = {
+      "status": "FAILURE",
+      "message": "procedure required"
+    }
+    return Response(result, status.HTTP_204_NO_CONTENT)
+  if 'final_diagnostic' not in body:
+    result = {
+      "status": "FAILURE",
+      "message": "final_diagnostic required"
+    }
+    return Response(result, status.HTTP_204_NO_CONTENT)
+  
+  if 'exams' not in body:
+    result = {
+      "status": "FAILURE",
+      "message": "exams required"
+    }
+    return Response(result, status.HTTP_204_NO_CONTENT)
+  
+  try: 
+    learner = LeanerPhysicianSerializer(LeanerPhysician.objects.get(pk=body["learner"]), many=False, context=context).data
+  except LeanerPhysician.DoesNotExist: 
+    return JsonResponse({'message': 'The learner does not exist'}, status=status.HTTP_404_NOT_FOUND)
+  
+  try: 
+    clinical_case = ClinicalCaseSerializer(ClinicalCase.objects.get(pk=body["clinical_case"]), many=False, context=context).data
+  except LeanerPhysician.DoesNotExist: 
+    return JsonResponse({'message': 'The learner does not exist'}, status=status.HTTP_404_NOT_FOUND)
+  
+  symps_case = []
+  symps = {}
+  exam = {}
+  exam_case = []
+
+  note_symps = 0
+  note_exam = 0
+
+  clinical = ClinicalCase(request, id_clinical_case=body["clinical_case"])[0]
+
+  for s in clinical["symptom"]:
+    symps_case.append(s["name"])
+  
+  for e in clinical["exam"]:
+    exam_case.append(e["name"])
+  
+  symps_case = set(symps_case)
+  exam_case = set(exam_case)
+  bsymp = set(body["symptoms"])
+
+  symps_utiles = getSymptom1(clinical["final_diagnosis"]) - symps_case
+
+  len_indis = len(bsymp & symps_case)
+  len_utile = len((bsymp - symps_case) & symps_utiles)
+  len_nefaste = len((bsymp - symps_case) - symps_utiles)
+
+  note_symps = ((2 * len_indis) + len_utile - len_nefaste)/((2 * len(symps_case)) + len(symps_utiles))
+
+  if len(exam_case) == 0 :
+    if len(body["exams"]) == 0:
+      note_exam = 1
+  else:
+    if len(body["exams"]) == 0:
+      note_exam = 0
+    else:
+      note_exam = ((2 * len(body["exams"] & exam_case)) - len(body["exam"] - exam_case)) / (2 * len(exam_case))
+      if note_exam < 0:
+        note_exam = 0
+  note = (0.4 * note_symps) + (0.2 * note_exam)
+  if body["final_diagnostic"]:
+    note += 0.2
+  if body["procedure"]:
+    note += 0.2
+  
+  for sy in bsymp:
+    if sy in symps_case:
+      symps[sy] = 0
+    elif sy in symps_utiles:
+      symps[sy] = 1
+    else:
+      symps[sy] = 2
+    
+  for ex in body["exams"]:
+    if ex in exam_case:
+      exam[ex] = 0
+    else:
+      exam[ex] = 1
+
+  result = {
+    "note":note,
+    "symptoms":symps,
+    "exams":exam
+  }
   return Response(result, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
